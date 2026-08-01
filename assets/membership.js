@@ -7,6 +7,9 @@
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRDdKsHdD1g4XrqmaPzukwjtZBu2hjsHrE81Tlv6NckXk4RnmRZRlage-s7aYiKRfy/exec";
 const MAPBOX_TOKEN    = "";
 
+// Add ?debug to the page URL to surface the real error text on screen
+const DEBUG = new URLSearchParams(location.search).has("debug");
+
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
@@ -181,31 +184,40 @@ form.addEventListener("submit", async e => {
   statusEl.textContent = "Saving your spot...";
 
   try {
-    if (!APPS_SCRIPT_URL.startsWith("http")) throw new Error("no endpoint");
+    if (!APPS_SCRIPT_URL.startsWith("http")) {
+      throw new Error("APPS_SCRIPT_URL has not been filled in yet.");
+    }
+    if (!/\/exec$/.test(APPS_SCRIPT_URL)) {
+      throw new Error("APPS_SCRIPT_URL should end in /exec, not /dev.");
+    }
+
     // text/plain keeps this a simple request, so Apps Script sees no CORS preflight
     const res = await fetch(APPS_SCRIPT_URL, {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
-    const out = await res.json();
-    if (!out.ok) throw new Error(out.error || "sheet error");
+
+    const raw = await res.text();
+    if (DEBUG) console.log("Apps Script replied:", res.status, raw);
+
+    let out;
+    try {
+      out = JSON.parse(raw);
+    } catch (parseErr) {
+      // An HTML reply means Google served a login or error page instead of the script
+      throw new Error("Google returned a page instead of data. The deployment is probably not set to 'Anyone'.");
+    }
+    if (!out.ok) throw new Error(out.error || "The script ran but did not write a row.");
+
     finish();
   } catch (err) {
-    console.warn("Primary submit failed, falling back:", err);
-    try {
-      await fetch(APPS_SCRIPT_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(payload)
-      });
-      finish();
-    } catch (err2) {
-      btn.disabled = false;
-      statusEl.className = "status bad";
-      statusEl.textContent = "That didn't go through. Try again, or email avondalegardeners@gmail.com and we'll add you by hand.";
-    }
+    console.error("Sign-up failed:", err);
+    btn.disabled = false;
+    statusEl.className = "status bad";
+    statusEl.textContent = DEBUG
+      ? err.message
+      : "That didn't go through. Try again, or email avondalegardeners@gmail.com and we'll add you by hand.";
   }
 });
 
