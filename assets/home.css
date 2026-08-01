@@ -1,0 +1,60 @@
+/* Homepage only: hero art, welcome, fair */
+
+/* ---------------- hero ---------------- */
+  .hero{position:relative;line-height:0}
+  .hero img{width:100%;height:auto}
+  .hotspot{
+    position:absolute;
+    display:block;
+    border-radius:10px;
+    text-indent:-9999px;
+    overflow:hidden;
+    transition:background-color .15s ease;
+  }
+  .hotspot:hover{background:rgba(1,65,65,.09)}
+
+  /* ---------------- welcome ---------------- */
+  .wrap{max-width:1000px;margin:0 auto;padding:0 28px}
+  .welcome{padding:104px 0 0}
+  .welcome h2{
+    font-family:var(--font-display);
+    font-weight:400;
+    color:var(--teal-deep);
+    font-size:62px;
+    letter-spacing:-.02em;
+    line-height:1.1;
+    text-align:center;
+    margin:0 0 62px;
+  }
+  .welcome p{max-width:790px;margin:0 auto;font-size:16px}
+
+  /* ---------------- fair ---------------- */
+  .fair{
+    display:grid;
+    grid-template-columns:456px 1fr;
+    gap:56px;
+    align-items:start;
+    padding:150px 0 40px;
+  }
+  .fair .flyer{border:1px solid #eee}
+  .fair h2{
+    font-family:var(--font-marker);
+    font-weight:400;
+    font-size:44px;
+    line-height:1.25;
+    margin:-108px 0 26px;
+    max-width:9ch;
+  }
+  .fair p{margin:0 0 18px}
+  .fair ul{margin:0 0 34px;padding-left:22px}
+  .fair li{margin-bottom:16px}
+  .fair .cta{width:100%;text-align:center;padding:20px 26px}
+
+  
+  @media (max-width:900px){
+    .welcome{padding-top:56px}
+    .welcome h2{font-size:42px;margin-bottom:34px}
+    .fair{grid-template-columns:1fr;gap:30px;padding-top:74px}
+    .fair h2{margin-top:0;font-size:34px;max-width:none}
+    .fair .flyer{margin:0 auto}
+  }

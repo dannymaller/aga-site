@@ -1,0 +1,200 @@
+/* Avondale Gardening Alliance - shared base
+   tokens, type roles, header, buttons, footer */
+
+@font-face{
+  font-family:'American Typewriter';
+  src:url('american-typewriter.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+
+  :root{
+    /* --- brand color, sampled from the live site --- */
+    --ink:#000000;
+    --teal-deep:#014141;
+    --teal:#066666;
+    --green:#1d6746;
+    --brown:#794b0c;
+    --brown-dark:#55260e;
+    --sand:#cbb8ac;
+    --nav-green:#659865;
+    --nav-plum:#833360;
+    --nav-blue:#00699b;
+    --nav-teal:#006666;
+    --clay:#b0500f;
+    --paper:#faf7f0;
+    --line:#d9d2c4;
+    --header-top:#3a3939;
+    --header-bottom:#cccccc;
+
+    /* --- type roles: swap these when we get the real brand fonts --- */
+    --font-display:'American Typewriter', 'Courier New', serif;   /* "Welcome, Neighbor!" */
+    --font-marker:'Gochi Hand', 'Bradley Hand', cursive;    /* hand-lettered headings */
+    --font-ui:'Permanent Marker', 'Gochi Hand', cursive;    /* nav, buttons, footer title */
+    --font-body:'Avenir Next', 'Nunito Sans', 'Segoe UI', Helvetica, Arial, sans-serif;
+
+    --hero-w:1518;
+    --hero-h:825;
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:#fff;
+    color:var(--ink);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.62;
+  }
+  img{display:block;max-width:100%}
+  a{color:var(--teal-deep)}
+
+  .skip{
+    position:absolute;left:-9999px;top:0;background:#fff;color:var(--teal-deep);
+    padding:10px 16px;z-index:100;border-radius:6px;
+  }
+  .skip:focus{left:12px;top:12px}
+
+  :focus-visible{outline:3px solid var(--nav-blue);outline-offset:3px}
+
+  /* ---------------- header ---------------- */
+  .masthead{
+    background:linear-gradient(to bottom, var(--header-top) 0%, var(--header-bottom) 100%);
+    height:185px;
+    display:flex;
+    align-items:center;
+    gap:28px;
+    padding:0 46px 24px;
+  }
+  .logo{flex:0 0 auto}
+  .logo img{width:280px;height:auto}
+
+  .mainnav{
+    flex:1 1 auto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+    padding-top:44px;
+  }
+  .mainnav a{
+    font-family:var(--font-ui);
+    font-size:19px;
+    letter-spacing:.5px;
+    text-decoration:none;
+    background:#fff;
+    padding:2px 10px 3px;
+    line-height:1.25;
+    border-radius:2px;
+  }
+  .mainnav a:hover{transform:rotate(-1deg)}
+  .mainnav a{transition:transform .12s ease}
+  .nav-about{color:var(--nav-green)}
+  .nav-events{color:var(--nav-plum)}
+  .nav-projects{color:var(--nav-blue)}
+  .nav-resources{color:var(--nav-teal)}
+  .nav-membership{color:#b0500f}
+
+  .head-actions{flex:0 0 auto;display:flex;gap:12px;align-items:center;padding-top:44px}
+
+  .btn{
+    display:inline-block;
+    font-family:var(--font-ui);
+    font-size:16px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+    color:#fff;
+    text-decoration:none;
+    padding:16px 26px;
+    border-radius:8px;
+    border:0;
+    cursor:pointer;
+    line-height:1;
+    transition:transform .12s ease, filter .12s ease;
+  }
+  .btn:hover{filter:brightness(1.12);transform:translateY(-2px)}
+  .btn-green{background:var(--green)}
+  .btn-teal{background:var(--teal)}
+  .btn-brown{background:var(--brown-dark)}
+
+    .mainnav a[aria-current]{background:var(--clay);color:#fff}
+  .btn[disabled]{opacity:.6;cursor:progress;transform:none}
+  [hidden]{display:none !important}
+
+/* ---------------- footer ---------------- */
+  .footer-tear{width:100%;height:auto;margin-bottom:-1px}
+  footer{background:var(--brown);color:#fff;padding:8px 0 44px}
+  .footer-inner{max-width:1440px;margin:0 auto;padding:0 40px}
+  footer h2{
+    font-family:var(--font-ui);
+    font-weight:400;
+    font-size:44px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin:34px 0 46px;
+  }
+  .footer-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .newsletter-label{color:var(--sand);margin:0 0 14px;font-size:17px}
+  .newsletter{display:flex;max-width:370px;width:100%}
+  .newsletter input{
+    flex:1 1 auto;
+    border:0;
+    padding:17px 18px;
+    font-family:var(--font-body);
+    font-size:15px;
+    color:#333;
+    min-width:0;
+  }
+  .newsletter button{
+    flex:0 0 auto;
+    background:var(--brown-dark);
+    color:#fff;
+    border:0;
+    width:62px;
+    font-size:20px;
+    cursor:pointer;
+  }
+  .newsletter button:hover{filter:brightness(1.25)}
+  .footer-links{display:flex;gap:26px;flex-wrap:wrap}
+  .footer-links .btn{padding:18px 34px}
+  .rule{border:0;border-top:1px solid rgba(255,255,255,.55);margin:52px 0 26px}
+  .footer-bottom{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+  .social{display:flex;gap:18px}
+  .social a{
+    width:44px;height:44px;border-radius:50%;
+    border:1px solid rgba(255,255,255,.45);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;
+  }
+  .social a:hover{background:var(--brown-dark)}
+  .social svg{width:17px;height:17px;fill:currentColor}
+  .copyright{font-family:var(--font-ui);font-size:13px;color:var(--sand);letter-spacing:.5px}
+
+  
+  /* ---------------- responsive: header + footer ---------------- */
+  @media (max-width:1180px){
+    .masthead{padding:0 24px 18px;gap:16px}
+    .logo img{width:220px}
+    .mainnav{gap:10px}
+    .mainnav a{font-size:16px}
+    .btn{padding:14px 18px;font-size:14px}
+  }
+  @media (max-width:900px){
+    .masthead{height:auto;flex-wrap:wrap;justify-content:center;padding:22px 20px 26px;text-align:center}
+    .mainnav,.head-actions{padding-top:0;width:100%;justify-content:center}
+    footer h2{font-size:30px}
+    .footer-row{align-items:flex-start}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none !important}
+    .mainnav a:hover,.btn:hover{transform:none}
+  }

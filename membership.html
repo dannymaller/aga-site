@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Become a Member | Avondale Gardening Alliance</title>
+<meta name="description" content="Join the Avondale Gardening Alliance. Tell your neighbors what you grow, what you need a hand with, and what tools you are happy to share.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/membership.css">
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+<a class="skip" href="#main-content">Skip to content</a>
+
+<header class="masthead">
+  <a class="logo" href="index.html" aria-label="Avondale Gardening Alliance home">
+    <img src="assets/logo.png" alt="Avondale Gardening Alliance">
+  </a>
+  <nav class="mainnav" aria-label="Main">
+    <a class="nav-about" href="https://avondalegardeners.org/about">About</a>
+    <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
+    <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
+    <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
+    <a class="nav-membership" href="membership.html" aria-current="page">Membership</a>
+  </nav>
+  <div class="head-actions">
+    <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
+  </div>
+</header>
+
+<main id="main-content">
+  <section class="intro" id="intro">
+    <h1>Become a Member</h1>
+    <p>Membership is free. Tell us where you are and what you are up to in the garden, and we will put you on the neighborhood map so other members can find you.</p>
+  </section>
+
+  <form id="member-form" novalidate>
+
+    <fieldset>
+      <div class="step"><span class="step-num">01</span><h2>Who are you?</h2></div>
+      <p class="hint">Your name shows up on the member map. Your email and phone never do.</p>
+      <div class="grid">
+        <div class="field">
+          <label for="first">First name</label>
+          <input id="first" name="first" type="text" autocomplete="given-name" required>
+        </div>
+        <div class="field">
+          <label for="last">Last name</label>
+          <input id="last" name="last" type="text" autocomplete="family-name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone <span class="optional">(optional)</span></label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="773-555-0134">
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="step"><span class="step-num">02</span><h2>Where's your patch?</h2></div>
+      <p class="hint">This is what drops your pin on the map. Start typing and pick your address from the list.</p>
+      <div class="grid">
+        <div class="field span autocomplete">
+          <label for="street">Street address</label>
+          <input id="street" name="street" type="text" autocomplete="off" required
+                 aria-describedby="street-help" aria-autocomplete="list" aria-expanded="false" role="combobox" aria-controls="street-suggestions">
+          <div class="suggestions" id="street-suggestions" role="listbox" hidden></div>
+          <span class="err" id="street-help"></span>
+        </div>
+        <div class="field">
+          <label for="unit">Apartment or unit <span class="optional">(optional)</span></label>
+          <input id="unit" name="unit" type="text" autocomplete="address-line2">
+        </div>
+        <div class="field">
+          <label for="city">City</label>
+          <input id="city" name="city" type="text" autocomplete="address-level2" value="Chicago" required>
+        </div>
+        <div class="field">
+          <label for="state">State</label>
+          <input id="state" name="state" type="text" autocomplete="address-level1" value="IL" required>
+        </div>
+        <div class="field">
+          <label for="zip">ZIP</label>
+          <input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" required>
+        </div>
+      </div>
+      <input type="hidden" id="lat" name="lat">
+      <input type="hidden" id="lng" name="lng">
+    </fieldset>
+
+    <fieldset>
+      <div class="step"><span class="step-num">03</span><h2>What brings you here?</h2></div>
+      <p class="hint">Check everything that fits. You can change it later.</p>
+      <div class="cards" id="interests">
+        <label class="card">
+          <input type="checkbox" name="interest" value="I have a garden">
+          <span class="tick" aria-hidden="true"></span>
+          <span class="label">I have a garden<span class="sub">Beds, containers, a plot, a few pots on the porch, all of it counts.</span></span>
+        </label>
+        <label class="card">
+          <input type="checkbox" name="interest" value="I garden but have no space">
+          <span class="tick" aria-hidden="true"></span>
+          <span class="label">I garden but have no space<span class="sub">Looking for somewhere to put seeds in the ground.</span></span>
+        </label>
+        <label class="card">
+          <input type="checkbox" name="interest" value="I could use help with my garden">
+          <span class="tick" aria-hidden="true"></span>
+          <span class="label">I could use help with my garden<span class="sub">You have space but not the time, the reach, or the back for it.</span></span>
+        </label>
+        <label class="card">
+          <input type="checkbox" name="interest" value="I want to help in someone else's garden">
+          <span class="tick" aria-hidden="true"></span>
+          <span class="label">I want to help in someone else's garden<span class="sub">Happy to weed, water, prune, or haul for a neighbor.</span></span>
+        </label>
+        <label class="card">
+          <input type="checkbox" name="interest" value="I am just getting started">
+          <span class="tick" aria-hidden="true"></span>
+          <span class="label">I am just getting started<span class="sub">Here to learn from people who have done this a while.</span></span>
+        </label>
+        <label class="card">
+          <input type="checkbox" name="interest" value="I have seeds, seedlings, or cuttings to share">
+          <span class="tick" aria-hidden="true"></span>
+          <span class="label">I have seeds or seedlings to share<span class="sub">Swaps, extra starts, cuttings, or a surplus of zucchini.</span></span>
+        </label>
+      </div>
+      <div class="field" style="margin-top:22px">
+        <label for="about">Anything you want neighbors to know? <span class="optional">(optional)</span></label>
+        <textarea id="about" name="about" placeholder="What you grow, what you are trying this year, when you are usually around."></textarea>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <div class="step"><span class="step-num">04</span><h2>Tool sharing</h2></div>
+      <div class="toggle-row">
+        <div>
+          <p id="tool-label">Are you interested in the tool sharing program?</p>
+          <p class="sub">Members can see what you have and ask to borrow or trade. Nobody gets your address without you saying yes first.</p>
+        </div>
+        <button type="button" class="switch" id="tool-switch" role="switch" aria-checked="false" aria-labelledby="tool-label" aria-controls="tool-tray">
+          <span class="track" aria-hidden="true"><span class="knob"></span></span>
+          <span id="tool-switch-text">No</span>
+        </button>
+      </div>
+
+      <div class="tray" id="tool-tray" inert>
+        <div class="tray-inner">
+          <p class="hint" style="margin-top:0">List what you are willing to lend out. Rough is fine, you can add more later.</p>
+          <div id="tool-list"></div>
+          <button type="button" class="add-tool" id="add-tool">+ Add another tool</button>
+          <div class="field" style="margin-top:24px">
+            <label for="tool-notes">How should neighbors arrange a pickup? <span class="optional">(optional)</span></label>
+            <input id="tool-notes" name="toolNotes" type="text" placeholder="Text me first, weekends are easiest.">
+          </div>
+        </div>
+      </div>
+    </fieldset>
+
+    <label class="consent">
+      <input type="checkbox" id="consent" name="consent" required>
+      <span>I am okay with my name and location showing on the member map, and with other members contacting me through AGA.</span>
+    </label>
+
+    <div class="submit-row">
+      <button type="submit" class="btn btn-teal" id="submit-btn">Join the Alliance</button>
+      <span class="status" id="status" role="status" aria-live="polite"></span>
+    </div>
+  </form>
+
+  <section class="done" id="done" hidden>
+    <h2>You're in. Welcome, neighbor!</h2>
+    <p>We saved your spot on the map. Keep an eye on your inbox for the next workday, seed swap, and everything happening around the Fair.</p>
+    <p style="margin-top:34px"><a class="btn btn-teal" href="index.html">Back to the homepage</a></p>
+  </section>
+</main>
+
+<img class="footer-tear" src="assets/torn.png" alt="">
+<footer>
+  <div class="footer-inner">
+    <h2>Avondale Gardening Alliance</h2>
+    <div class="footer-row">
+      <div>
+        <p class="newsletter-label">Subscribe to our newsletter!</p>
+        <form class="newsletter" onsubmit="return false;">
+          <label class="skip" for="nl-email">Email address</label>
+          <input id="nl-email" type="email" placeholder="Stay in touch with AGA!" autocomplete="email">
+          <button type="submit" aria-label="Submit">&#8594;</button>
+        </form>
+      </div>
+      <div class="footer-links">
+        <a class="btn btn-brown" href="mailto:avondalegardeners@gmail.com">Contact Us</a>
+        <a class="btn btn-brown" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA</a>
+      </div>
+    </div>
+    <hr class="rule">
+    <div class="footer-bottom">
+      <div class="social">
+        <a href="https://www.facebook.com/AvondaleGardeningAlliance" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-9h3l.5-3.5h-3.5V7.3c0-1 .3-1.7 1.8-1.7H17V2.4C16.7 2.4 15.6 2.3 14.4 2.3c-2.6 0-4.4 1.6-4.4 4.5v2.7H7V13h3v9h3.5z"/></svg></a>
+        <a href="https://www.instagram.com/avondalegardeners" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.3-.1 1.7-.1 4.9-.1m0 6.3a3.5 3.5 0 100 7 3.5 3.5 0 000-7m5.4-.9a.8.8 0 11-1.6 0 .8.8 0 011.6 0M12 10.4a1.6 1.6 0 110 3.2 1.6 1.6 0 010-3.2"/></svg></a>
+        <a href="https://www.youtube.com/@avondalegardeningalliance9448" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22 12s0-3.2-.4-4.7c-.2-.9-.9-1.5-1.7-1.7C18.3 5.2 12 5.2 12 5.2s-6.3 0-7.9.4c-.8.2-1.5.8-1.7 1.7C2 8.8 2 12 2 12s0 3.2.4 4.7c.2.9.9 1.5 1.7 1.7 1.6.4 7.9.4 7.9.4s6.3 0 7.9-.4c.8-.2 1.5-.8 1.7-1.7.4-1.5.4-4.7.4-4.7M10 15.2V8.8l5.2 3.2-5.2 3.2z"/></svg></a>
+      </div>
+      <p class="copyright">&#169; 2026 Avondale Gardening Alliance</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/membership.js" defer></script>
+</body>
+</html>
