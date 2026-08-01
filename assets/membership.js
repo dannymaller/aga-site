@@ -4,7 +4,7 @@
    MAPBOX_TOKEN:    public token, pk.***. Leave blank to type addresses
                     by hand (no lat/lng gets saved).
 ------------------------------------------------------------------ */
-const APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRDdKsHdD1g4XrqmaPzukwjtZBu2hjsHrE81Tlv6NckXk4RnmRZRlage-s7aYiKRfy/exec";
 const MAPBOX_TOKEN    = "";
 
 const $ = (s, r = document) => r.querySelector(s);
