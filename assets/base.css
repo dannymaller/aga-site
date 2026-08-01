@@ -96,7 +96,8 @@
   .nav-events{color:var(--nav-plum)}
   .nav-projects{color:var(--nav-blue)}
   .nav-resources{color:var(--nav-teal)}
-  .nav-membership{color:#b0500f}
+  .nav-membership{color:var(--clay)}
+  .nav-map{color:var(--nav-plum)}
 
   .head-actions{flex:0 0 auto;display:flex;gap:12px;align-items:center;padding-top:44px}
 

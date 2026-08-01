@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Member Map | Avondale Gardening Alliance</title>
+<meta name="description" content="See who is growing what around Avondale. Find neighbors with gardens, neighbors looking for space, and members sharing tools.">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/map.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/leaflet/leaflet.css">
+</head>
+<body>
+<a class="skip" href="#main-content">Skip to content</a>
+
+<header class="masthead">
+  <a class="logo" href="index.html" aria-label="Avondale Gardening Alliance home">
+    <img src="assets/logo.png" alt="Avondale Gardening Alliance">
+  </a>
+  <nav class="mainnav" aria-label="Main">
+    <a class="nav-about" href="https://avondalegardeners.org/about">About</a>
+    <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
+    <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
+    <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
+    <a class="nav-map" href="map.html" aria-current="page">Map</a>
+    <a class="nav-membership" href="membership.html">Membership</a>
+  </nav>
+  <div class="head-actions">
+    <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
+  </div>
+</header>
+
+<main id="main-content">
+  <section class="map-intro">
+    <h1>Who's growing what</h1>
+    <p>Every pin is a member. Click one to see what they're up to and what they're happy to lend out.</p>
+  </section>
+
+  <div class="map-shell">
+    <aside class="panel" aria-label="Member filters and list">
+      <div class="filters" role="group" aria-label="Filter members">
+        <button type="button" class="chip is-on" data-filter="all">Everyone</button>
+        <button type="button" class="chip" data-filter="garden">Has a garden</button>
+        <button type="button" class="chip" data-filter="space">Needs space</button>
+        <button type="button" class="chip" data-filter="help">Wants a hand</button>
+        <button type="button" class="chip" data-filter="helper">Offering help</button>
+        <button type="button" class="chip" data-filter="tools">Shares tools</button>
+      </div>
+
+      <p class="count" id="count" aria-live="polite">Loading members...</p>
+
+      <ul class="member-list" id="member-list"></ul>
+
+      <div class="panel-foot">
+        <a class="btn btn-teal" href="membership.html">Add yourself to the map</a>
+      </div>
+    </aside>
+
+    <div class="map-wrap">
+      <div id="map" role="application" aria-label="Map of Avondale Gardening Alliance members"></div>
+
+      <div class="map-message" id="map-message" hidden>
+        <div>
+          <h2 id="map-message-title">Map unavailable</h2>
+          <p id="map-message-body"></p>
+        </div>
+      </div>
+
+      <div class="legend" aria-hidden="true">
+        <span><i class="dot dot-garden"></i>Has a garden</span>
+        <span><i class="dot dot-space"></i>Needs space</span>
+        <span><i class="dot dot-help"></i>Wants a hand</span>
+        <span><i class="dot dot-other"></i>Other</span>
+        <span><i class="dot dot-ring"></i>Shares tools</span>
+      </div>
+    </div>
+  </div>
+</main>
+
+<img class="footer-tear" src="assets/torn.png" alt="">
+<footer>
+  <div class="footer-inner">
+    <h2>Avondale Gardening Alliance</h2>
+    <div class="footer-row">
+      <div>
+        <p class="newsletter-label">Subscribe to our newsletter!</p>
+        <form class="newsletter" onsubmit="return false;">
+          <label class="skip" for="nl-email">Email address</label>
+          <input id="nl-email" type="email" placeholder="Stay in touch with AGA!" autocomplete="email">
+          <button type="submit" aria-label="Submit">&#8594;</button>
+        </form>
+      </div>
+      <div class="footer-links">
+        <a class="btn btn-brown" href="mailto:avondalegardeners@gmail.com">Contact Us</a>
+        <a class="btn btn-brown" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA</a>
+      </div>
+    </div>
+    <hr class="rule">
+    <div class="footer-bottom">
+      <div class="social">
+        <a href="https://www.facebook.com/AvondaleGardeningAlliance" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M13.5 22v-9h3l.5-3.5h-3.5V7.3c0-1 .3-1.7 1.8-1.7H17V2.4C16.7 2.4 15.6 2.3 14.4 2.3c-2.6 0-4.4 1.6-4.4 4.5v2.7H7V13h3v9h3.5z"/></svg></a>
+        <a href="https://www.instagram.com/avondalegardeners" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.3-.1-1.7-.1-4.9s0-3.6.1-4.9c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.3-.1 1.7-.1 4.9-.1m0 6.3a3.5 3.5 0 100 7 3.5 3.5 0 000-7m5.4-.9a.8.8 0 11-1.6 0 .8.8 0 011.6 0M12 10.4a1.6 1.6 0 110 3.2 1.6 1.6 0 010-3.2"/></svg></a>
+        <a href="https://www.youtube.com/@avondalegardeningalliance9448" aria-label="YouTube"><svg viewBox="0 0 24 24"><path d="M22 12s0-3.2-.4-4.7c-.2-.9-.9-1.5-1.7-1.7C18.3 5.2 12 5.2 12 5.2s-6.3 0-7.9.4c-.8.2-1.5.8-1.7 1.7C2 8.8 2 12 2 12s0 3.2.4 4.7c.2.9.9 1.5 1.7 1.7 1.6.4 7.9.4 7.9.4s6.3 0 7.9-.4c.8-.2 1.5-.8 1.7-1.7.4-1.5.4-4.7.4-4.7M10 15.2V8.8l5.2 3.2-5.2 3.2z"/></svg></a>
+      </div>
+      <p class="copyright">&#169; 2026 Avondale Gardening Alliance</p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/leaflet/leaflet.js"></script>
+<script src="assets/config.js"></script>
+<script src="assets/map.js" defer></script>
+</body>
+</html>

@@ -29,12 +29,11 @@
   textarea{min-height:96px;resize:vertical}
   .err{color:#9a2a1e;font-size:14px;min-height:0}
 
-  /* address suggestions */
-  .autocomplete{position:relative}
-  .suggestions{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:2px solid var(--line);border-radius:8px;z-index:20;max-height:250px;overflow:auto;box-shadow:0 12px 26px rgba(0,0,0,.12)}
-  .suggestions[hidden]{display:none}
-  .suggestions button{display:block;width:100%;text-align:left;background:none;border:0;padding:11px 14px;font-family:var(--font-body);font-size:15px;cursor:pointer}
-  .suggestions button:hover,.suggestions button:focus{background:#f0f5f4}
+  /* address confirmation */
+  .geo-status{font-size:15px;margin:16px 0 0;min-height:24px;display:flex;align-items:center;gap:8px}
+  .geo-status.looking{color:#5a5a5a}
+  .geo-status.found{color:var(--green);font-weight:600}
+  .geo-status.missing{color:#8a5a12}
 
   /* checkbox cards */
   .cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}

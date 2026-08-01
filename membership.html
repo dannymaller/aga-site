@@ -23,6 +23,7 @@
     <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
     <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
     <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
+    <a class="nav-map" href="map.html">Map</a>
     <a class="nav-membership" href="membership.html" aria-current="page">Membership</a>
   </nav>
   <div class="head-actions">
@@ -63,14 +64,12 @@
 
     <fieldset>
       <div class="step"><span class="step-num">02</span><h2>Where's your patch?</h2></div>
-      <p class="hint">This is what drops your pin on the map. Start typing and pick your address from the list.</p>
+      <p class="hint">This is what drops your pin on the map, so street number and ZIP both matter.</p>
       <div class="grid">
-        <div class="field span autocomplete">
+        <div class="field span">
           <label for="street">Street address</label>
-          <input id="street" name="street" type="text" autocomplete="off" required
-                 aria-describedby="street-help" aria-autocomplete="list" aria-expanded="false" role="combobox" aria-controls="street-suggestions">
-          <div class="suggestions" id="street-suggestions" role="listbox" hidden></div>
-          <span class="err" id="street-help"></span>
+          <input id="street" name="street" type="text" autocomplete="address-line1" required
+                 aria-describedby="geo-status" placeholder="3100 N Sawyer Ave">
         </div>
         <div class="field">
           <label for="unit">Apartment or unit <span class="optional">(optional)</span></label>
@@ -89,6 +88,7 @@
           <input id="zip" name="zip" type="text" inputmode="numeric" autocomplete="postal-code" required>
         </div>
       </div>
+      <p class="geo-status" id="geo-status" role="status" aria-live="polite"></p>
       <input type="hidden" id="lat" name="lat">
       <input type="hidden" id="lng" name="lng">
     </fieldset>
@@ -208,6 +208,7 @@
   </div>
 </footer>
 
+<script src="assets/config.js"></script>
 <script src="assets/membership.js" defer></script>
 </body>
 </html>

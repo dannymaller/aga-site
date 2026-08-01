@@ -1,15 +1,15 @@
 /**
- * The only file with settings in it. Both the sign-up form and the map read
- * from here, so you paste each value once.
+ * The only file with settings in it. Already filled in.
  *
- * APPS_SCRIPT_URL  the /exec URL from Deploy > Manage deployments
- * MAPBOX_TOKEN     your public token from account.mapbox.com, starts with pk.
+ * APPS_SCRIPT_URL is the /exec address of the Google Apps Script web app that
+ * reads and writes the members sheet. If you ever create a brand new
+ * deployment rather than a new version of the existing one, Google issues a
+ * new URL and it goes here.
  *
- * Both are visible to anyone who views source. That is normal for these two.
- * Add a URL restriction to the Mapbox token in your account once the real
- * domain is live, so it only works on your own site.
+ * Nothing else needs configuring. The map draws with OpenStreetMap tiles and
+ * addresses are looked up by the Census geocoder, so there are no API keys
+ * anywhere in this project.
  */
 window.AGA_CONFIG = {
-  APPS_SCRIPT_URL: "PASTE_YOUR_APPS_SCRIPT_EXEC_URL_HERE",
-  MAPBOX_TOKEN: "PASTE_YOUR_MAPBOX_TOKEN_HERE"
+  APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwRDdKsHdD1g4XrqmaPzukwjtZBu2hjsHrE81Tlv6NckXk4RnmRZRlage-s7aYiKRfy/exec"
 };

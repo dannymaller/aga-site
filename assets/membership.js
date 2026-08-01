@@ -1,11 +1,8 @@
-/* ------------------------------------------------------------------
-   CONFIG. Fill these two in and the page is live.
-   APPS_SCRIPT_URL: the /exec URL from Deploy > New deployment > Web app
-   MAPBOX_TOKEN:    public token, pk.***. Leave blank to type addresses
-                    by hand (no lat/lng gets saved).
------------------------------------------------------------------- */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwRDdKsHdD1g4XrqmaPzukwjtZBu2hjsHrE81Tlv6NckXk4RnmRZRlage-s7aYiKRfy/exec";
-const MAPBOX_TOKEN    = "";
+/* Settings live in assets/config.js. Loaded before this file. */
+const CFG = window.AGA_CONFIG || {};
+const APPS_SCRIPT_URL = CFG.APPS_SCRIPT_URL || "";
+// The form does not use Mapbox. Addresses are looked up by the Apps Script,
+// which asks the US Census geocoder.
 
 // Add ?debug to the page URL to surface the real error text on screen
 const DEBUG = new URLSearchParams(location.search).has("debug");
@@ -69,71 +66,54 @@ function collectTools() {
     .filter(t => t.tool);
 }
 
-/* ---------- address autocomplete (Mapbox) ---------- */
+/* ---------- address check ----------
+   Asks the Apps Script to look the address up while somebody is filling the
+   form, so a typo shows up here instead of as a missing pin later. Purely
+   advisory: the server geocodes again on submit either way. */
+
 const street = $("#street");
-const box = $("#street-suggestions");
-let timer, features = [];
+const geoStatus = $("#geo-status");
+let geoTimer;
 
-street.addEventListener("input", () => {
-  $("#lat").value = "";
-  $("#lng").value = "";
-  clearTimeout(timer);
-  const q = street.value.trim();
-  if (!MAPBOX_TOKEN || q.length < 4) return hideSuggestions();
-  timer = setTimeout(() => lookup(q), 280);
+["#street", "#city", "#state", "#zip"].forEach(sel => {
+  $(sel).addEventListener("input", () => {
+    $("#lat").value = "";
+    $("#lng").value = "";
+    clearTimeout(geoTimer);
+    geoTimer = setTimeout(checkAddress, 700);
+  });
 });
 
-async function lookup(q) {
-  const url = "https://api.mapbox.com/geocoding/v5/mapbox.places/" + encodeURIComponent(q) +
-    ".json?access_token=" + MAPBOX_TOKEN +
-    "&country=us&types=address&limit=5&proximity=-87.7080,41.9400";
+async function checkAddress() {
+  const parts = [street.value, $("#city").value, $("#state").value, $("#zip").value]
+    .map(v => v.trim()).filter(Boolean);
+
+  if (!street.value.trim() || !$("#zip").value.trim() || !APPS_SCRIPT_URL.startsWith("http")) {
+    setGeo("", "");
+    return;
+  }
+
+  setGeo("looking", "Checking that address...");
   try {
-    const r = await fetch(url);
-    const data = await r.json();
-    features = data.features || [];
-    if (!features.length) return hideSuggestions();
-    box.innerHTML = "";
-    features.forEach((f, i) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.setAttribute("role", "option");
-      b.textContent = f.place_name;
-      b.addEventListener("click", () => choose(i));
-      box.appendChild(b);
-    });
-    box.hidden = false;
-    street.setAttribute("aria-expanded", "true");
-  } catch (e) {
-    hideSuggestions();
+    const res = await fetch(APPS_SCRIPT_URL + "?action=geocode&q=" + encodeURIComponent(parts.join(", ")));
+    const data = await res.json();
+    if (data.found) {
+      $("#lat").value = data.lat;
+      $("#lng").value = data.lng;
+      setGeo("found", "Found it: " + data.matched);
+    } else {
+      setGeo("missing", "We couldn't place that one. Go ahead and sign up anyway, we'll sort the pin out.");
+    }
+  } catch (err) {
+    if (DEBUG) console.warn("Address check failed:", err);
+    setGeo("", "");
   }
 }
 
-function choose(i) {
-  const f = features[i];
-  const part = t => (f.context || []).find(c => c.id.startsWith(t));
-  street.value = f.address ? f.address + " " + f.text : f.text;
-  $("#city").value = part("place")?.text || $("#city").value;
-  $("#state").value = part("region")?.short_code?.replace("US-", "") || $("#state").value;
-  $("#zip").value = part("postcode")?.text || $("#zip").value;
-  $("#lng").value = f.center[0];
-  $("#lat").value = f.center[1];
-  hideSuggestions();
+function setGeo(state, text) {
+  geoStatus.className = "geo-status" + (state ? " " + state : "");
+  geoStatus.textContent = text;
 }
-
-function hideSuggestions() {
-  box.hidden = true;
-  street.setAttribute("aria-expanded", "false");
-}
-document.addEventListener("click", e => {
-  if (!e.target.closest(".autocomplete")) hideSuggestions();
-});
-street.addEventListener("keydown", e => {
-  if (e.key === "Escape") hideSuggestions();
-  if (e.key === "ArrowDown" && !box.hidden) {
-    e.preventDefault();
-    box.querySelector("button")?.focus();
-  }
-});
 
 /* ---------- submit ---------- */
 const form = $("#member-form");
