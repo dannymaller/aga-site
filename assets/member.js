@@ -39,6 +39,13 @@ function paint(p) {
   if (p.completedLoans) bits.push(p.completedLoans + (p.completedLoans === 1 ? " completed loan" : " completed loans"));
   $("#m-sub").textContent = bits.join(" \u00b7 ") || "Neighborhood member";
 
+  if (p.email && !p.isMe) {
+    const btn = $("#m-email");
+    btn.hidden = false;
+    btn.href = "mailto:" + encodeURIComponent(p.email) +
+      "?subject=" + encodeURIComponent("Hello from the AGA member map");
+  }
+
   // about
   if (p.interests.length || p.about) {
     $("#about-section").hidden = false;

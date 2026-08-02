@@ -262,9 +262,7 @@ function popupHTML(m) {
   return '<div class="pop">' +
       '<h3 class="pop-name"><a class="pop-profile-link" href="member.html?id=' + esc(m.id) + '">' + esc(m.name) + "</a></h3>" +
       tags + about + tools +
-      '<a class="pop-cta" href="mailto:avondalegardeners@gmail.com?subject=' +
-        encodeURIComponent("Hello to " + m.name + " from the member map") +
-      '">Say hello through AGA</a>' +
+      '<a class="pop-cta" href="member.html?id=' + esc(m.id) + '">View full profile</a>' +
     "</div>";
 }
 
