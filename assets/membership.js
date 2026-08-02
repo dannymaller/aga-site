@@ -10,6 +10,50 @@ const DEBUG = new URLSearchParams(location.search).has("debug");
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
+/* ---------- signed-in members are editing, not joining ---------- */
+
+if (window.AGA && AGA.session()) prefill();
+
+async function prefill() {
+  try {
+    const data = await AGA.call("me", { token: AGA.token() });
+    if (!data.ok || !data.profile) return;
+    const p = data.profile;
+
+    $("#page-title").textContent = "Update your details";
+    $("#submit-btn").textContent = "Save changes";
+    $("#done-next").href = "dashboard.html";
+
+    [["first", p.first], ["last", p.last], ["email", p.email], ["phone", p.phone],
+     ["street", p.street], ["unit", p.unit], ["city", p.city], ["state", p.state],
+     ["zip", p.zip], ["about", p.about], ["lat", p.lat], ["lng", p.lng],
+     ["tool-notes", p.toolNotes]].forEach(pair => {
+      const el = $("#" + pair[0]);
+      if (el && pair[1]) el.value = pair[1];
+    });
+
+    $$('input[name="interest"]').forEach(box => {
+      box.checked = (p.interests || []).indexOf(box.value) > -1;
+    });
+
+    $("#consent").checked = true;
+
+    if (p.toolSharing && p.tools.length) {
+      setTools(true);
+      $("#tool-list").innerHTML = "";
+      p.tools.forEach(t => {
+        addToolRow();
+        const row = $$(".tool-row", tray).pop();
+        row.querySelector(".tool-name").value = t.tool || "";
+        row.querySelector(".tool-note").value = t.notes || "";
+        if (t.category) row.querySelector(".tool-cat").value = t.category;
+      });
+    }
+  } catch (err) {
+    if (DEBUG) console.warn("Prefill skipped:", err);
+  }
+}
+
 /* ---------- tool sharing toggle + tray ---------- */
 const sw = $("#tool-switch");
 const tray = $("#tool-tray");

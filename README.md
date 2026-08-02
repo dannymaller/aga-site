@@ -1,7 +1,8 @@
 # Avondale Gardening Alliance
 
-Homepage, member sign-up, and member map. Plain HTML, CSS, and JavaScript. No
-build step, no dependencies to install, no API keys anywhere.
+Homepage, member sign-up, sign-in, member dashboard, and member map. Plain
+HTML, CSS, and JavaScript. No build step, no dependencies to install, no API
+keys anywhere.
 
 Three pieces fit together:
 
@@ -13,16 +14,22 @@ Three pieces fit together:
 
 ```
 index.html              homepage, rebuilt from the live site
-membership.html         member sign-up form
-map.html                member map
+membership.html         sign-up form, doubles as edit-your-details when signed in
+login.html              sign in with an emailed code
+dashboard.html          member home, signed in only
+map.html                member map, signed in only
 _headers                cache and security headers for Cloudflare Pages
 README.md               this file
 assets/
   config.js             the one settings file, already filled in
+  auth.js               session storage and every call to the script
   base.css              tokens, type roles, header, buttons, footer
   home.css              hero, welcome, fair
   membership.css        form, tool tray, success state
-  membership.js         validation, address check, submit
+  membership.js         validation, address check, submit, prefill
+  account.css           login and dashboard
+  login.js              two-step sign in
+  dashboard.js          member home
   map.css               panel, filters, pins, popups
   map.js                fetches members, draws pins
   leaflet/              map library, self hosted
@@ -96,9 +103,48 @@ looks the address up again on submit regardless.
 Mapbox geocoding is deliberately not used. Its terms permit displaying results
 but not storing them, and storage requires a card on file.
 
+### Signing in
+
+No passwords. A member types their email, the script mails a six digit code,
+and a correct code trades for a session token the browser keeps in
+`localStorage` for 30 days. Come back inside that window and the login screen
+never appears.
+
+Codes and tokens are both stored hashed in the sheet, so a copy of the
+spreadsheet does not let anyone in. Codes last ten minutes, burn after five
+wrong tries, and can only be resent once a minute.
+
+Two tabs appear on first use, **Auth** for pending codes and **Sessions** for
+signed-in browsers. Both are safe to clear by hand at any time. Doing so signs
+everyone out. `clearExpired()` sweeps out stale rows; put it on a daily trigger
+if you like, or ignore it, since expired rows are refused anyway.
+
+Mail goes out from the Google account that owns the script. Consumer Gmail
+allows on the order of 100 messages a day, which is a lot of sign-ins for a
+group this size.
+
+Tuning knobs sit at the top of `Code.gs`: `CODE_MINUTES`, `SESSION_DAYS`,
+`MAX_ATTEMPTS`, `RESEND_SECONDS`.
+
+If somebody's email is not in the Members tab, the login page says so and
+offers the sign-up form rather than pretending a code went out. That does tell
+a stranger whether an address is a member, which for a public neighborhood
+group is a fair trade for not stranding people on a screen that lies to them.
+
+### The dashboard
+
+`dashboard.html` shows the member their own record: name, address, contact,
+what they picked, their tools, and whether their pin actually landed. From
+there they can open the map or edit their details.
+
+Editing reuses the sign-up form. When a signed-in member opens
+`membership.html`, it fills itself in from their record and the button changes
+to Save changes. Submitting updates their row instead of adding one, since the
+script matches on email.
+
 ### The map
 
-`map.js` calls `?action=members`. The script answers with public fields only:
+`map.js` calls `?action=members` with the session token. It answers only to a signed-in member, with public fields only:
 display name, coordinates, interests, the free-text note, and tools. Email,
 phone, and street address never leave the sheet. Rows without coordinates, or
 without a Yes in the Consent column, are skipped.
@@ -150,8 +196,12 @@ Lat, Lng, Interests, Tool Sharing, and Consent. Leave Lat and Lng empty and run
 
 - The homepage hero is an image cropped from the live site. The original is an
   SVG and would be sharper.
-- Pins sit at exact addresses. If the map should not show where people live,
-  the fix is either fuzzing coordinates in `Code.gs` before they go out, or
-  putting the map behind a login.
-- No confirmation email on sign-up. Apps Script can send one with
-  `MailApp.sendEmail` in a few lines.
+- Pins sit at exact addresses. The map is behind a login now, so only members
+  see them, but if that is still too precise the fix is fuzzing the
+  coordinates in `publicMembers()` before they go out.
+- No welcome email on sign-up. The plumbing is there, `MailApp.sendEmail` is
+  already in use for codes.
+- Nothing stops somebody signing up with an email that is not theirs. Requiring
+  a code before the row is written would close that, at the cost of a longer
+  sign-up.
+- No admin view. Right now managing members means opening the sheet.

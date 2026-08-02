@@ -1,8 +1,6 @@
 /* Member map. Leaflet with OpenStreetMap tiles, no API key anywhere.
    The one setting it needs lives in assets/config.js. */
 
-const CFG = window.AGA_CONFIG || {};
-const APPS_SCRIPT_URL = CFG.APPS_SCRIPT_URL || "";
 const DEBUG = new URLSearchParams(location.search).has("debug");
 
 // Avondale, roughly Belmont and Kedzie
@@ -54,11 +52,7 @@ function showMessage(title, body) {
 /* ---------- boot ---------- */
 
 function start() {
-  if (!APPS_SCRIPT_URL.startsWith("http")) {
-    showMessage("Map needs the sheet address", "Add your Apps Script /exec URL to assets/config.js.");
-    $("#count").textContent = "";
-    return;
-  }
+  if (!AGA.require()) return;   // bounces to the login page
 
   map = L.map("map", { scrollWheelZoom: false }).setView(CENTER, ZOOM);
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -75,16 +69,8 @@ function start() {
 
 async function load() {
   try {
-    const res = await fetch(APPS_SCRIPT_URL + "?action=members");
-    const raw = await res.text();
-    if (DEBUG) console.log("members reply:", raw.slice(0, 400));
-
-    let data;
-    try {
-      data = JSON.parse(raw);
-    } catch (e) {
-      throw new Error("The script returned a page instead of data. Check that the deployment is open to Anyone.");
-    }
+    const data = await AGA.authed("members");
+    if (!data) return;                       // the page is already heading to login
     if (!data.ok) throw new Error(data.error || "Could not read the member list.");
 
     members = (data.members || []).filter(m => m.lat && m.lng);

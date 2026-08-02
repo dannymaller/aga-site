@@ -98,6 +98,7 @@
   .nav-resources{color:var(--nav-teal)}
   .nav-membership{color:var(--clay)}
   .nav-map{color:var(--nav-plum)}
+  .nav-account{color:var(--nav-green)}
 
   .head-actions{flex:0 0 auto;display:flex;gap:12px;align-items:center;padding-top:44px}
 

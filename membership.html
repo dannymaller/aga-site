@@ -25,6 +25,7 @@
     <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
     <a class="nav-map" href="map.html">Map</a>
     <a class="nav-membership" href="membership.html" aria-current="page">Membership</a>
+    <a class="nav-account" href="dashboard.html">My AGA</a>
   </nav>
   <div class="head-actions">
     <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
@@ -33,7 +34,7 @@
 
 <main id="main-content">
   <section class="intro" id="intro">
-    <h1>Become a Member</h1>
+    <h1 id="page-title">Become a Member</h1>
     <p>Membership is free. Tell us where you are and what you are up to in the garden, and we will put you on the neighborhood map so other members can find you.</p>
   </section>
 
@@ -174,7 +175,9 @@
   <section class="done" id="done" hidden>
     <h2>You're in. Welcome, neighbor!</h2>
     <p>We saved your spot on the map. Keep an eye on your inbox for the next workday, seed swap, and everything happening around the Fair.</p>
-    <p style="margin-top:34px"><a class="btn btn-teal" href="index.html">Back to the homepage</a></p>
+    <p style="margin-top:34px">
+      <a class="btn btn-teal" id="done-next" href="login.html">Sign in and see the map</a>
+    </p>
   </section>
 </main>
 
@@ -209,6 +212,7 @@
 </footer>
 
 <script src="assets/config.js"></script>
+<script src="assets/auth.js"></script>
 <script src="assets/membership.js" defer></script>
 </body>
 </html>

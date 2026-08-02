@@ -3,14 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Member Map | Avondale Gardening Alliance</title>
-<meta name="description" content="See who is growing what around Avondale. Find neighbors with gardens, neighbors looking for space, and members sharing tools.">
+<title>My AGA | Avondale Gardening Alliance</title>
+<meta name="robots" content="noindex">
 <link rel="stylesheet" href="assets/base.css">
-<link rel="stylesheet" href="assets/map.css">
+<link rel="stylesheet" href="assets/account.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/leaflet/leaflet.css">
 </head>
 <body>
 <a class="skip" href="#main-content">Skip to content</a>
@@ -24,58 +23,52 @@
     <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
     <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
     <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
-    <a class="nav-map" href="map.html" aria-current="page">Map</a>
-    <a class="nav-account" href="dashboard.html">My AGA</a>
+    <a class="nav-map" href="map.html">Map</a>
+    <a class="nav-membership" href="dashboard.html" aria-current="page">My AGA</a>
   </nav>
   <div class="head-actions">
-    <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
+    <button type="button" class="btn btn-brown" id="sign-out">Sign out</button>
   </div>
 </header>
 
 <main id="main-content">
-  <section class="map-intro">
-    <h1>Who's growing what</h1>
-    <p>Every pin is a member. Click one to see what they're up to and what they're happy to lend out.</p>
+  <section class="dash-head">
+    <p class="eyebrow">Member since <span id="joined">...</span></p>
+    <h1 id="greeting">Hello, neighbor</h1>
+    <p class="lede" id="pin-status">Checking your spot on the map...</p>
   </section>
 
-  <div class="map-shell">
-    <aside class="panel" aria-label="Member filters and list">
-      <div class="filters" role="group" aria-label="Filter members">
-        <button type="button" class="chip is-on" data-filter="all">Everyone</button>
-        <button type="button" class="chip" data-filter="garden">Has a garden</button>
-        <button type="button" class="chip" data-filter="space">Needs space</button>
-        <button type="button" class="chip" data-filter="help">Wants a hand</button>
-        <button type="button" class="chip" data-filter="helper">Offering help</button>
-        <button type="button" class="chip" data-filter="tools">Shares tools</button>
-      </div>
+  <div class="dash-grid">
 
-      <p class="count" id="count" aria-live="polite">Loading members...</p>
+    <section class="card panel-card">
+      <h2>Your details</h2>
+      <dl class="details" id="details">
+        <dt>Name</dt><dd id="d-name">...</dd>
+        <dt>Address</dt><dd id="d-address">...</dd>
+        <dt>Email</dt><dd id="d-email">...</dd>
+        <dt>Phone</dt><dd id="d-phone">...</dd>
+      </dl>
+      <p class="fineprint">Neighbors only ever see your name, your pin, and what you're up to. Your email, phone, and street number stay in the office.</p>
+      <a class="btn btn-outline wide" href="membership.html">Update my details</a>
+    </section>
 
-      <ul class="member-list" id="member-list"></ul>
+    <section class="card panel-card">
+      <h2>What you're up to</h2>
+      <ul class="chips" id="interests"></ul>
+      <p class="about" id="about"></p>
+    </section>
 
-      <div class="panel-foot">
-        <a class="btn btn-teal" href="membership.html">Add yourself to the map</a>
-      </div>
-    </aside>
+    <section class="card panel-card">
+      <h2>Your tools</h2>
+      <div id="tools"></div>
+    </section>
 
-    <div class="map-wrap">
-      <div id="map" role="application" aria-label="Map of Avondale Gardening Alliance members"></div>
+    <section class="card panel-card map-card">
+      <h2>The member map</h2>
+      <p>See who's growing what around the neighborhood, and who has a wheelbarrow you can borrow.</p>
+      <a class="btn btn-teal wide" href="map.html">Open the map</a>
+    </section>
 
-      <div class="map-message" id="map-message" hidden>
-        <div>
-          <h2 id="map-message-title">Map unavailable</h2>
-          <p id="map-message-body"></p>
-        </div>
-      </div>
-
-      <div class="legend" aria-hidden="true">
-        <span><i class="dot dot-garden"></i>Has a garden</span>
-        <span><i class="dot dot-space"></i>Needs space</span>
-        <span><i class="dot dot-help"></i>Wants a hand</span>
-        <span><i class="dot dot-other"></i>Other</span>
-        <span><i class="dot dot-ring"></i>Shares tools</span>
-      </div>
-    </div>
   </div>
 </main>
 
@@ -109,9 +102,8 @@
   </div>
 </footer>
 
-<script src="assets/leaflet/leaflet.js"></script>
 <script src="assets/config.js"></script>
 <script src="assets/auth.js"></script>
-<script src="assets/map.js" defer></script>
+<script src="assets/dashboard.js" defer></script>
 </body>
 </html>

@@ -3,14 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Member Map | Avondale Gardening Alliance</title>
-<meta name="description" content="See who is growing what around Avondale. Find neighbors with gardens, neighbors looking for space, and members sharing tools.">
+<title>Sign In | Avondale Gardening Alliance</title>
+<meta name="description" content="Sign in to the Avondale Gardening Alliance member map.">
 <link rel="stylesheet" href="assets/base.css">
-<link rel="stylesheet" href="assets/map.css">
+<link rel="stylesheet" href="assets/account.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/leaflet/leaflet.css">
 </head>
 <body>
 <a class="skip" href="#main-content">Skip to content</a>
@@ -24,8 +23,7 @@
     <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
     <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
     <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
-    <a class="nav-map" href="map.html" aria-current="page">Map</a>
-    <a class="nav-account" href="dashboard.html">My AGA</a>
+    <a class="nav-membership" href="membership.html">Membership</a>
   </nav>
   <div class="head-actions">
     <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
@@ -33,49 +31,59 @@
 </header>
 
 <main id="main-content">
-  <section class="map-intro">
-    <h1>Who's growing what</h1>
-    <p>Every pin is a member. Click one to see what they're up to and what they're happy to lend out.</p>
-  </section>
+  <div class="card-wrap">
 
-  <div class="map-shell">
-    <aside class="panel" aria-label="Member filters and list">
-      <div class="filters" role="group" aria-label="Filter members">
-        <button type="button" class="chip is-on" data-filter="all">Everyone</button>
-        <button type="button" class="chip" data-filter="garden">Has a garden</button>
-        <button type="button" class="chip" data-filter="space">Needs space</button>
-        <button type="button" class="chip" data-filter="help">Wants a hand</button>
-        <button type="button" class="chip" data-filter="helper">Offering help</button>
-        <button type="button" class="chip" data-filter="tools">Shares tools</button>
+    <!-- step one: email -->
+    <section class="card" id="step-email">
+      <h1>Welcome back</h1>
+      <p class="lede">Sign in with the email you joined with. We'll send you a code, no password to remember.</p>
+
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com">
       </div>
 
-      <p class="count" id="count" aria-live="polite">Loading members...</p>
+      <p class="note bad" id="email-error" hidden></p>
 
-      <ul class="member-list" id="member-list"></ul>
+      <button type="button" class="btn btn-teal wide" id="send-code">Email me a code</button>
 
-      <div class="panel-foot">
-        <a class="btn btn-teal" href="membership.html">Add yourself to the map</a>
+      <div class="alt">
+        <p>Not a member yet?</p>
+        <a class="btn btn-outline wide" href="membership.html">Sign up now</a>
       </div>
-    </aside>
+    </section>
 
-    <div class="map-wrap">
-      <div id="map" role="application" aria-label="Map of Avondale Gardening Alliance members"></div>
+    <!-- step two: code -->
+    <section class="card" id="step-code" hidden>
+      <h1>Check your email</h1>
+      <p class="lede">We sent a six digit code to <strong id="sent-to"></strong>. It's good for ten minutes.</p>
 
-      <div class="map-message" id="map-message" hidden>
-        <div>
-          <h2 id="map-message-title">Map unavailable</h2>
-          <p id="map-message-body"></p>
-        </div>
+      <div class="field">
+        <label for="code">Sign-in code</label>
+        <input id="code" type="text" inputmode="numeric" autocomplete="one-time-code"
+               maxlength="6" class="code-input" placeholder="000000">
       </div>
 
-      <div class="legend" aria-hidden="true">
-        <span><i class="dot dot-garden"></i>Has a garden</span>
-        <span><i class="dot dot-space"></i>Needs space</span>
-        <span><i class="dot dot-help"></i>Wants a hand</span>
-        <span><i class="dot dot-other"></i>Other</span>
-        <span><i class="dot dot-ring"></i>Shares tools</span>
+      <p class="note bad" id="code-error" hidden></p>
+
+      <button type="button" class="btn btn-teal wide" id="verify">Sign in</button>
+
+      <div class="alt">
+        <button type="button" class="linky" id="resend">Send another code</button>
+        <button type="button" class="linky" id="back">Use a different email</button>
       </div>
-    </div>
+    </section>
+
+    <!-- not on the list -->
+    <section class="card" id="step-nomember" hidden>
+      <h1>We don't have that one</h1>
+      <p class="lede">No member is signed up with <strong id="unknown-email"></strong>. Joining takes about two minutes and it's free.</p>
+      <a class="btn btn-teal wide" href="membership.html">Sign up now</a>
+      <div class="alt">
+        <button type="button" class="linky" id="try-again">Try another email</button>
+      </div>
+    </section>
+
   </div>
 </main>
 
@@ -109,9 +117,8 @@
   </div>
 </footer>
 
-<script src="assets/leaflet/leaflet.js"></script>
 <script src="assets/config.js"></script>
 <script src="assets/auth.js"></script>
-<script src="assets/map.js" defer></script>
+<script src="assets/login.js" defer></script>
 </body>
 </html>

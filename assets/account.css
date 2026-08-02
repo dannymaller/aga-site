@@ -1,0 +1,110 @@
+/* Login and dashboard */
+
+  .nav-map{color:var(--nav-plum)}
+
+  /* ---- shared card ---- */
+  .card-wrap{max-width:520px;margin:0 auto;padding:74px 28px 110px}
+  .card{
+    background:var(--paper);
+    border:2px solid var(--line);
+    border-radius:14px;
+    padding:34px 32px;
+  }
+  .card h1{
+    font-family:var(--font-display);
+    font-weight:400;
+    color:var(--teal-deep);
+    font-size:42px;
+    letter-spacing:-.02em;
+    line-height:1.1;
+    margin:0 0 12px;
+  }
+  .card h2{font-family:var(--font-marker);font-weight:400;font-size:26px;margin:0 0 16px;line-height:1.2}
+  .lede{margin:0 0 26px;font-size:16px;color:#4a4a4a}
+
+  .field{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+  label{font-weight:600;font-size:15px}
+  input[type=text],input[type=email]{
+    font-family:var(--font-body);font-size:16px;color:var(--ink);
+    padding:14px;border:2px solid var(--line);border-radius:8px;background:#fff;width:100%;
+  }
+  input:focus{border-color:var(--teal);outline:none}
+  .code-input{
+    font-size:30px;letter-spacing:.35em;text-align:center;
+    font-family:var(--font-body);font-weight:700;padding:16px 14px 16px 20px;
+  }
+
+  .note{font-size:14px;margin:10px 0 0;color:#4a4a4a}
+  .note.bad{color:#9a2a1e}
+
+  .btn.wide{display:block;width:100%;text-align:center;padding:18px;margin-top:22px}
+  .btn-outline{
+    background:none;
+    color:var(--teal-deep);
+    border:2px solid var(--teal-deep);
+  }
+  .btn-outline:hover{background:var(--teal-deep);color:#fff}
+
+  .alt{margin-top:28px;padding-top:22px;border-top:2px solid var(--line);text-align:center}
+  .alt p{margin:0;font-size:15px;color:#4a4a4a}
+  .linky{
+    background:none;border:0;padding:6px 4px;cursor:pointer;
+    font-family:var(--font-body);font-size:15px;font-weight:600;
+    color:var(--teal-deep);text-decoration:underline;
+  }
+  .linky + .linky{margin-left:14px}
+  .linky:hover{color:var(--clay)}
+
+  /* ---- dashboard ---- */
+  .dash-head{max-width:1100px;margin:0 auto;padding:64px 28px 8px}
+  .eyebrow{
+    font-family:var(--font-ui);font-size:13px;letter-spacing:1.4px;
+    text-transform:uppercase;color:var(--clay);margin:0 0 10px;
+  }
+  .dash-head h1{
+    font-family:var(--font-display);font-weight:400;color:var(--teal-deep);
+    font-size:56px;letter-spacing:-.02em;line-height:1.1;margin:0 0 12px;
+  }
+  .dash-head .lede{margin:0;font-size:17px}
+  .dash-head .good{color:var(--green);font-weight:600}
+  .dash-head .warn{color:#8a5a12;font-weight:600}
+
+  .dash-grid{
+    max-width:1100px;margin:0 auto;padding:36px 28px 110px;
+    display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start;
+  }
+  .panel-card{padding:28px 30px}
+
+  .details{margin:0 0 18px;display:grid;grid-template-columns:auto 1fr;gap:10px 18px;font-size:15px}
+  .details dt{font-weight:700;color:#5a5a5a}
+  .details dd{margin:0}
+
+  .fineprint{font-size:13px;color:#6b6b6b;margin:0 0 6px;line-height:1.5}
+  .muted{color:#6b6b6b;font-size:15px;margin:0}
+
+  .chips{list-style:none;margin:0 0 14px;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+  .chips li{
+    background:#fff;border:2px solid var(--line);border-radius:999px;
+    padding:7px 14px;font-size:14px;font-weight:600;color:var(--teal-deep);
+  }
+  .chips li.muted{border-style:dashed;font-weight:400}
+  .about{font-size:15px;color:#4a4a4a;margin:0}
+
+  .tool-list{list-style:none;margin:0;padding:0}
+  .tool-list li{
+    background:#fff;border:2px solid var(--line);border-left:6px solid var(--brown-dark);
+    border-radius:8px;padding:12px 14px;margin-bottom:10px;font-size:15px;
+  }
+  .tool-list .cat{display:block;font-size:13px;color:#6b6b6b;margin-top:2px}
+  .tool-list .tnote{display:block;font-size:13px;color:#4a4a4a;font-style:italic;margin-top:4px}
+
+  .map-card{background:#eef4f3;border-color:var(--teal)}
+  .map-card p{font-size:15px;color:#4a4a4a;margin:0}
+
+  @media (max-width:860px){
+    .card-wrap{padding-top:44px}
+    .card h1{font-size:34px}
+    .dash-head{padding-top:40px}
+    .dash-head h1{font-size:38px}
+    .dash-grid{grid-template-columns:1fr;padding-bottom:70px}
+  }
