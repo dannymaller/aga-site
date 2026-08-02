@@ -53,6 +53,7 @@ async function prefill() {
     if ($("#already")) $("#already").hidden = true;
     $("#submit-btn").textContent = "Save changes";
     $("#done-next").href = "dashboard.html";
+    if ($("#danger-zone")) { $("#danger-zone").hidden = false; initLeaveAGA(); }
 
     [["first", p.first], ["last", p.last], ["email", p.email], ["phone", p.phone],
      ["street", p.street], ["unit", p.unit], ["city", p.city], ["state", p.state],
@@ -320,4 +321,99 @@ async function finish() {
   }
 
   location.href = "login.html?joined=1";
+}
+
+/* ---------- leaving AGA ---------- */
+
+function initLeaveAGA() {
+  const leaveBtn = $("#leave-btn");
+  const confirmInput = $("#leave-confirm");
+  const confirmBtn = $("#leave-confirm-btn");
+  if (!leaveBtn) return;
+
+  // Opening the leave flow first checks for live loans that block it.
+  leaveBtn.addEventListener("click", async () => {
+    leaveBtn.disabled = true;
+    try {
+      const data = await AGA.authed("deleteCheck");
+      if (!data || !data.ok) throw new Error(data && data.error ? data.error : "check failed");
+      if (!data.canDelete) {
+        showBlockers(data.blockers);
+      } else {
+        openLeaveModal();
+      }
+    } catch (e) {
+      alert(DEBUG ? e.message : "Couldn't check your account just now. Try again in a moment.");
+    } finally {
+      leaveBtn.disabled = false;
+    }
+  });
+
+  // The confirm button only wakes up when the word is exactly DELETE.
+  confirmInput.addEventListener("input", () => {
+    confirmBtn.disabled = confirmInput.value.trim().toUpperCase() !== "DELETE";
+    setLeaveError("");
+  });
+
+  confirmBtn.addEventListener("click", async () => {
+    confirmBtn.disabled = true;
+    try {
+      const data = await AGA.authed("deleteAccount", { confirm: confirmInput.value.trim() });
+      if (!data) return;
+      if (!data.ok) {
+        // A loan may have gone live between the check and now.
+        if (data.blockers && data.blockers.length) {
+          closeLeaveModals();
+          showBlockers(data.blockers);
+          return;
+        }
+        setLeaveError(data.error || "Couldn't do that.");
+        confirmBtn.disabled = false;
+        return;
+      }
+      // Gone. Clear the session locally and land on the homepage.
+      AGA.forget();
+      location.href = "index.html";
+    } catch (e) {
+      setLeaveError(DEBUG ? e.message : "Couldn't reach the server.");
+      confirmBtn.disabled = false;
+    }
+  });
+
+  document.querySelectorAll("[data-close-leave]").forEach(b =>
+    b.addEventListener("click", closeLeaveModals));
+  document.querySelectorAll("#leave-modal, #blocked-modal").forEach(v =>
+    v.addEventListener("click", e => { if (e.target === v) closeLeaveModals(); }));
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeLeaveModals(); });
+}
+
+function showBlockers(blockers) {
+  const list = $("#blocker-list");
+  list.innerHTML = "";
+  (blockers || []).forEach(b => {
+    const li = document.createElement("li");
+    li.textContent = b.reason;
+    list.appendChild(li);
+  });
+  $("#blocked-modal").hidden = false;
+}
+
+function openLeaveModal() {
+  $("#leave-confirm").value = "";
+  $("#leave-confirm-btn").disabled = true;
+  setLeaveError("");
+  $("#leave-modal").hidden = false;
+  $("#leave-confirm").focus();
+}
+
+function closeLeaveModals() {
+  const l = $("#leave-modal"); if (l) l.hidden = true;
+  const b = $("#blocked-modal"); if (b) b.hidden = true;
+}
+
+function setLeaveError(msg) {
+  const el = $("#leave-error");
+  if (!el) return;
+  el.textContent = msg || "";
+  el.hidden = !msg;
 }
