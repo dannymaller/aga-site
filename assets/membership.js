@@ -21,6 +21,7 @@ async function prefill() {
     const p = data.profile;
 
     $("#page-title").textContent = "Update your details";
+    if ($("#already")) $("#already").hidden = true;
     $("#submit-btn").textContent = "Save changes";
     $("#done-next").href = "dashboard.html";
 

@@ -106,4 +106,24 @@
   };
 
   window.AGA = AGA;
+
+  /**
+   * One Membership tab for everybody. The markup points it at the login card,
+   * which is what a signed-out visitor should see. When a session is found it
+   * gets repointed at the dashboard, so members skip the login screen. If the
+   * browser has forgotten the session, they land back on the card and sign in
+   * again.
+   */
+  function pointAccountLinks() {
+    if (!AGA.session()) return;
+    document.querySelectorAll("[data-account-link]").forEach(function (a) {
+      a.href = "dashboard.html";
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", pointAccountLinks);
+  } else {
+    pointAccountLinks();
+  }
 })();

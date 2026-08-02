@@ -131,7 +131,18 @@ offers the sign-up form rather than pretending a code went out. That does tell
 a stranger whether an address is a member, which for a public neighborhood
 group is a fair trade for not stranding people on a screen that lies to them.
 
-### The dashboard
+### The Membership tab
+
+There is one Membership tab in the nav and it follows who you are.
+
+- No session in the browser: it opens the login card, which offers Sign up now
+  for anyone who is not a member yet
+- Session found: it opens the dashboard, so members never see the login screen
+- Session expired or the browser was cleared: back to the login card
+
+The markup points the tab at `login.html`. `auth.js` repoints any link marked
+`data-account-link` to `dashboard.html` when it finds a session. Adding the tab
+to a new page means copying that one attribute.
 
 `dashboard.html` shows the member their own record: name, address, contact,
 what they picked, their tools, and whether their pin actually landed. From
