@@ -181,7 +181,7 @@ function render() {
   shown.forEach(m => {
     const icon = L.divIcon({
       className: "",
-      html: '<span class="pin"></span>',
+      html: '<span class="pin' + (lends(m) ? " pin-tools" : "") + '"></span>',
       iconSize: [22, 22],
       iconAnchor: [11, 11],
       popupAnchor: [0, -13]

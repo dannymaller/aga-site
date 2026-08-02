@@ -24,6 +24,7 @@
     display:flex;
     flex-direction:column;
     max-height:640px;
+    overflow:hidden;
   }
   .filters{display:flex;flex-wrap:wrap;gap:8px}
 
@@ -61,7 +62,12 @@
 
   .count{font-size:14px;color:#5a5a5a;margin:0 0 12px}
 
-  .member-list{list-style:none;margin:0;padding:0;overflow-y:auto;flex:1 1 auto}
+  .member-list{
+    list-style:none;margin:0;padding:0 4px 0 0;
+    overflow-y:auto;
+    flex:1 1 auto;
+    min-height:0;   /* without this the list refuses to shrink and shoves the button out */
+  }
   .member-list li{margin-bottom:10px}
   .member-list button{
     width:100%;
@@ -80,7 +86,7 @@
   .member-list .tools-flag{display:inline-block;font-size:12px;font-weight:700;color:var(--brown-dark);margin-top:6px;letter-spacing:.3px}
   .empty{padding:26px 4px;color:#5a5a5a;font-size:15px}
 
-  .panel-foot{padding-top:18px;margin-top:6px;border-top:2px solid var(--line)}
+  .panel-foot{flex:0 0 auto;padding-top:18px;margin-top:6px;border-top:2px solid var(--line)}
   .panel-foot .btn{display:block;text-align:center;padding:15px}
 
   /* ---- map ---- */
@@ -96,17 +102,30 @@
   .map-message p{margin:0;color:#4a4a4a;max-width:420px}
 
   /* ---- pins ---- */
+  /* Pin colours are their own thing, brighter than the brand palette, because
+     a dark green and a dark brown are indistinguishable at 22 pixels. */
   .pin{
     display:block;
     width:22px;height:22px;border-radius:50%;
-    background:var(--teal);
+    background:var(--pin-garden);
     border:3px solid #fff;
     box-shadow:0 2px 7px rgba(0,0,0,.4);
     cursor:pointer;
-    transition:transform .14s ease, background .14s ease;
+    transition:transform .14s ease, filter .14s ease;
   }
-  .pin:hover{transform:scale(1.25);background:var(--teal-deep)}
-  .leaflet-marker-icon:focus .pin{transform:scale(1.25)}
+  .pin-tools{background:var(--pin-tools)}
+  .pin:hover{transform:scale(1.3);filter:brightness(1.12)}
+  .leaflet-marker-icon:focus .pin{transform:scale(1.3)}
+
+  .pin-key{
+    display:flex;flex-wrap:wrap;gap:14px;
+    font-size:12.5px;color:#6b6b6b;
+    margin:14px 0 0;
+  }
+  .pin-key span{display:flex;align-items:center;gap:7px}
+  .pin-key i{width:12px;height:12px;border-radius:50%;display:inline-block;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+  .pin-key .k-garden{background:var(--pin-garden)}
+  .pin-key .k-tools{background:var(--pin-tools)}
 
   /* ---- popup ---- */
   .leaflet-popup-content-wrapper{
