@@ -107,9 +107,10 @@
 
   .btn{
     display:inline-block;
-    font-family:var(--font-ui);
-    font-size:16px;
-    letter-spacing:1.2px;
+    font-family:var(--font-body);
+    font-weight:700;
+    font-size:14.5px;
+    letter-spacing:.8px;
     text-transform:uppercase;
     color:#fff;
     text-decoration:none;
@@ -182,7 +183,7 @@
   }
   .social a:hover{background:var(--brown-dark)}
   .social svg{width:17px;height:17px;fill:currentColor}
-  .copyright{font-family:var(--font-ui);font-size:13px;color:var(--sand);letter-spacing:.5px}
+  .copyright{font-family:var(--font-body);font-size:13px;color:var(--sand);letter-spacing:.4px}
 
   
   /* ---------------- responsive: header + footer ---------------- */

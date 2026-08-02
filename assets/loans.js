@@ -64,7 +64,12 @@ function loanRow(l, youAre) {
   const whoLabel = youAre === "borrower" ? "From " + esc(other) : "To " + esc(other);
 
   let when = "Asked " + fmtDate(l.requested);
-  if (l.status === "approved" && l.due) when = "Due back " + fmtDate(l.due);
+  if (l.status === "approved") {
+    const bits = [];
+    if (l.start) bits.push("pickup " + fmtWhen(l.start));
+    if (l.due) bits.push("due back " + fmtWhen(l.due));
+    if (bits.length) when = bits.join(" \u00b7 ");
+  }
   if (l.status === "returned") when = "Returned " + fmtDate(l.returned);
 
   let left =
@@ -188,6 +193,14 @@ function statusLabel(s) {
   return { pending: "Pending", approved: "Out now", returned: "Returned",
     declined: "Declined", cancelled: "Cancelled" }[s] || s;
 }
+function fmtWhen(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const hasTime = d.getHours() || d.getMinutes();
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+    (hasTime ? " " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : "");
+}
+
 function fmtDate(iso) {
   return iso ? new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "";
 }

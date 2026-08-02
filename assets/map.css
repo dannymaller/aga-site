@@ -43,7 +43,7 @@
 
   .filter-group{margin-bottom:16px}
   .filter-label{
-    font-family:var(--font-ui);
+    font-family:var(--font-body);font-weight:700;
     font-size:11.5px;
     letter-spacing:1.3px;
     text-transform:uppercase;
@@ -113,7 +113,7 @@
     background:var(--paper);
     display:flex;align-items:center;justify-content:center;text-align:center;padding:40px;
   }
-  .map-message h2{font-family:var(--font-marker);font-weight:400;font-size:30px;margin:0 0 10px}
+  .map-message h2{font-family:var(--font-display);font-weight:400;font-size:28px;margin:0 0 10px;color:var(--teal-deep)}
   .map-message p{margin:0;color:#4a4a4a;max-width:420px}
 
   /* ---- pins ---- */
@@ -155,9 +155,9 @@
   .pop{min-width:236px;max-width:300px}
 
   .pop-name{
-    font-family:var(--font-marker);
+    font-family:var(--font-display);
     font-weight:400;
-    font-size:27px;
+    font-size:23px;
     line-height:1.05;
     margin:0 0 12px;
     color:var(--teal-deep);
@@ -185,7 +185,7 @@
 
   .pop-section{margin-top:15px;padding-top:13px;border-top:2px solid var(--line)}
   .pop-label{
-    font-family:var(--font-ui);
+    font-family:var(--font-body);font-weight:700;
     font-size:11.5px;
     letter-spacing:1.3px;
     text-transform:uppercase;
@@ -205,7 +205,8 @@
     background:var(--teal);
     color:#fff !important;
     text-decoration:none;
-    font-family:var(--font-ui);
+    font-family:var(--font-body);
+    font-weight:700;
     font-size:13px;
     letter-spacing:1px;
     text-transform:uppercase;

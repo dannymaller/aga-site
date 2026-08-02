@@ -86,7 +86,8 @@ function toolCard(t) {
     body +=
       '<div class="tc-loan">' +
         "<p><strong>Out with " + esc(l.borrowerName) + "</strong></p>" +
-        (l.due ? "<p>Due back " + fmtDate(l.due) + "</p>" : "") +
+        (l.start ? "<p>Pickup " + fmtWhen(l.start) + "</p>" : "") +
+        (l.due ? "<p>Due back " + fmtWhen(l.due) + "</p>" : "") +
         (l.borrowerAddress ? '<p class="tc-addr">' + esc(l.borrowerAddress) + "</p>" : "") +
         '<button type="button" class="btn btn-teal sm" data-return="' + l.id + '">Mark returned</button>' +
       "</div>";
@@ -234,6 +235,14 @@ function stars(n) {
   const full = Math.round(n);
   return "\u2605".repeat(full) + "\u2606".repeat(5 - full);
 }
+function fmtWhen(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const hasTime = d.getHours() || d.getMinutes();
+  return d.toLocaleDateString(undefined, { month: "short", day: "numeric" }) +
+    (hasTime ? " " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" }) : "");
+}
+
 function fmtDate(iso) {
   return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }

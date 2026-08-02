@@ -274,11 +274,50 @@ function openBorrow(toolId, toolName, ownerName) {
   $("#borrow-tool").textContent = toolName;
   $("#borrow-owner").textContent = ownerName;
   $("#borrow-msg").value = "";
+  $("#borrow-start").value = "";
   $("#borrow-due").value = "";
   $("#borrow-consent").checked = false;
   $("#borrow-error").hidden = true;
+  $("#borrow-reviews").innerHTML = '<p class="muted-sm">Checking reviews...</p>';
   $("#borrow-modal").dataset.toolId = toolId;
   $("#borrow-modal").hidden = false;
+  loadToolReviews(toolId);
+}
+
+async function loadToolReviews(toolId) {
+  const host = $("#borrow-reviews");
+  try {
+    const data = await AGA.authed("toolDetail", { toolId });
+    if (!data || !data.ok) { host.innerHTML = ""; return; }
+    const tool = data.tool;
+
+    if (!tool.rating.count) {
+      host.innerHTML = '<p class="muted-sm">No reviews yet. You could be the first.</p>';
+      return;
+    }
+
+    let html = '<p class="br-rating">' + starRow(tool.rating.average) + " " +
+      tool.rating.average + " from " + tool.rating.count +
+      (tool.rating.count === 1 ? " borrower" : " borrowers") + "</p>";
+
+    tool.reviews
+      .filter(r => r.direction === "of_owner")
+      .slice(0, 3)
+      .forEach(r => {
+        html += '<div class="br-review">' +
+          '<p class="br-head">' + starRow(r.rating) + " <strong>" + esc(r.reviewerName) + "</strong></p>" +
+          (r.comment ? '<p class="br-comment">' + esc(r.comment) + "</p>" : "") +
+          "</div>";
+      });
+    host.innerHTML = html;
+  } catch (err) {
+    host.innerHTML = "";
+  }
+}
+
+function starRow(n) {
+  const full = Math.round(n);
+  return "\u2605".repeat(full) + "\u2606".repeat(5 - full);
 }
 
 function ensureBorrowModal() {
@@ -292,8 +331,13 @@ function ensureBorrowModal() {
       '<h2 id="borrow-title">Ask to borrow</h2>' +
       '<p class="borrow-sub">You are asking <strong id="borrow-owner"></strong> for their <strong id="borrow-tool"></strong>. ' +
         'They will get an email and can say yes or no.</p>' +
-      '<div class="field"><label for="borrow-due">Return it by <span class="optional">(optional)</span></label>' +
-        '<input id="borrow-due" type="date"></div>' +
+      '<div id="borrow-reviews" class="borrow-reviews"></div>' +
+      '<div class="field-pair">' +
+        '<div class="field"><label for="borrow-start">Borrow from <span class="optional">(optional)</span></label>' +
+          '<input id="borrow-start" type="datetime-local"></div>' +
+        '<div class="field"><label for="borrow-due">Return it by <span class="optional">(optional)</span></label>' +
+          '<input id="borrow-due" type="datetime-local"></div>' +
+      '</div>' +
       '<div class="field"><label for="borrow-msg">A note <span class="optional">(optional)</span></label>' +
         '<textarea id="borrow-msg" maxlength="500" placeholder="What you need it for, when you could pick it up..."></textarea></div>' +
       '<div class="disclaimer">Borrowing is between you and the owner. The Avondale Gardening Alliance just runs the board. ' +
@@ -328,10 +372,20 @@ async function sendBorrow() {
   const btn = $("#borrow-send");
   btn.disabled = true;
   try {
+    const start = $("#borrow-start").value;
+    const due = $("#borrow-due").value;
+    if (start && due && new Date(due) <= new Date(start)) {
+      const e = $("#borrow-error");
+      e.textContent = "The return time needs to be after the pickup.";
+      e.hidden = false;
+      btn.disabled = false;
+      return;
+    }
     const data = await AGA.authed("requestLoan", {
       toolId,
       message: $("#borrow-msg").value.trim(),
-      due: $("#borrow-due").value || "",
+      start: start || "",
+      due: due || "",
       consent: true
     });
     if (!data) return;
