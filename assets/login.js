@@ -68,7 +68,12 @@ function initGoogle() {
   google.accounts.id.initialize({
     client_id: CLIENT_ID,
     callback: onGoogleCredential,
-    cancel_on_tap_outside: true
+    cancel_on_tap_outside: true,
+    // FedCM is the browser-native sign-in flow. It does not use the cross-window
+    // postMessage that a strict Cross-Origin-Opener-Policy blocks, so the
+    // credential reaches our callback reliably. itp_support helps Safari.
+    use_fedcm_for_prompt: true,
+    itp_support: true
   });
   google.accounts.id.renderButton($("#google-btn"), {
     theme: "outline",
