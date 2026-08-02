@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Membership | Avondale Gardening Alliance</title>
 <meta name="robots" content="noindex">
-<link rel="stylesheet" href="assets/base.css?v=20260802e">
-<link rel="stylesheet" href="assets/account.css?v=20260802e">
+<link rel="stylesheet" href="assets/base.css?v=20260802f">
+<link rel="stylesheet" href="assets/account.css?v=20260802f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
@@ -41,34 +41,43 @@
 
   <div class="dash-grid">
 
-    <section class="card panel-card">
-      <h2>Your details</h2>
-      <dl class="details" id="details">
-        <dt>Name</dt><dd id="d-name" class="skeleton">&nbsp;</dd>
-        <dt>Address</dt><dd id="d-address" class="skeleton">&nbsp;</dd>
-        <dt>Email</dt><dd id="d-email" class="skeleton">&nbsp;</dd>
-        <dt>Phone</dt><dd id="d-phone" class="skeleton">&nbsp;</dd>
-      </dl>
-      <p class="fineprint">Neighbors only ever see your name, your pin, and what you're up to. Your email, phone, and street number stay in the office.</p>
-      <a class="btn btn-outline wide" href="membership.html">Update my details</a>
-    </section>
+    <div class="dash-col">
+      <section class="card panel-card">
+        <div class="card-head">
+          <h2>Your profile</h2>
+          <a class="edit-link" href="membership.html">Edit</a>
+        </div>
 
-    <section class="card panel-card">
-      <h2>What you're up to</h2>
-      <ul class="chips" id="interests"></ul>
-      <p class="about" id="about"></p>
-    </section>
+        <dl class="details" id="details">
+          <dt>Name</dt><dd id="d-name" class="skeleton">&nbsp;</dd>
+          <dt>Address</dt><dd id="d-address" class="skeleton">&nbsp;</dd>
+          <dt>Email</dt><dd id="d-email" class="skeleton">&nbsp;</dd>
+          <dt>Phone</dt><dd id="d-phone" class="skeleton">&nbsp;</dd>
+        </dl>
 
-    <section class="card panel-card">
-      <h2>Your tools</h2>
-      <div id="tools"></div>
-    </section>
+        <div class="sub-block">
+          <h3>What you're up to</h3>
+          <ul class="chips" id="interests"></ul>
+          <p class="about" id="about"></p>
+        </div>
 
-    <section class="card panel-card map-card">
-      <h2>The member map</h2>
-      <p>See who's growing what around the neighborhood, and who has a wheelbarrow you can borrow.</p>
-      <a class="btn btn-teal wide" href="map.html">Open the map</a>
-    </section>
+        <div class="sub-block">
+          <h3>Your tools</h3>
+          <div id="tools"></div>
+        </div>
+
+        <p class="fineprint">Neighbors only ever see your name, your pin, and what you're up to. Your email, phone, and street number stay in the office.</p>
+        <a class="btn btn-outline wide" href="membership.html">Edit my profile</a>
+      </section>
+    </div>
+
+    <div class="dash-col">
+      <section class="card panel-card map-card">
+        <h2>The member map</h2>
+        <p>See who's growing what around the neighborhood, and who has a wheelbarrow you can borrow.</p>
+        <a class="btn btn-teal wide" href="map.html">Open the map</a>
+      </section>
+    </div>
 
   </div>
 </main>
@@ -104,8 +113,8 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=20260802e"></script>
-<script src="assets/auth.js?v=20260802e"></script>
-<script src="assets/dashboard.js?v=20260802e" defer></script>
+<script src="assets/config.js?v=20260802f"></script>
+<script src="assets/auth.js?v=20260802f"></script>
+<script src="assets/dashboard.js?v=20260802f" defer></script>
 </body>
 </html>
