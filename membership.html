@@ -7,8 +7,8 @@
 <meta name="description" content="Join the Avondale Gardening Alliance. Tell your neighbors what you grow, what you need a hand with, and what tools you are happy to share.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="assets/base.css?v=20260804d">
-<link rel="stylesheet" href="assets/membership.css?v=20260804d">
+<link rel="stylesheet" href="assets/base.css?v=20260805e">
+<link rel="stylesheet" href="assets/membership.css?v=20260805e">
 <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -175,6 +175,48 @@
     </div>
   </form>
 
+  <!-- Leaving AGA. Shown only when editing an existing profile. -->
+  <section class="danger-zone" id="danger-zone" hidden>
+    <hr class="danger-rule">
+    <h2>Leave AGA</h2>
+    <p>This removes you from the member map and takes down your tools. Your past
+      loans and the reviews tied to them stay, so other members' history keeps
+      working. You can rejoin anytime.</p>
+    <button type="button" class="btn btn-danger" id="leave-btn">Leave AGA</button>
+  </section>
+
+  <!-- blocked: live loans in the way -->
+  <div class="modal-veil" id="blocked-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="blocked-title">
+      <h2 id="blocked-title">Wrap these up first</h2>
+      <p>You can't leave while tools are still moving between you and other
+        members. Sort these out, then come back:</p>
+      <ul class="blocker-list" id="blocker-list"></ul>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close-leave>OK</button>
+        <a class="btn btn-teal" href="loans.html">Go to my loans</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- confirm: type DELETE -->
+  <div class="modal-veil" id="leave-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="leave-title">
+      <h2 id="leave-title">Leave AGA for good?</h2>
+      <p>This takes you off the map and removes your tools. It can't be undone
+        from here. To confirm, type <strong>DELETE</strong> below.</p>
+      <div class="field">
+        <label for="leave-confirm" class="skip">Type DELETE to confirm</label>
+        <input id="leave-confirm" type="text" autocomplete="off" placeholder="DELETE">
+      </div>
+      <p class="modal-error" id="leave-error" hidden></p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-outline" data-close-leave>Cancel</button>
+        <button type="button" class="btn btn-danger" id="leave-confirm-btn" disabled>Leave AGA</button>
+      </div>
+    </div>
+  </div>
+
   <section class="done" id="done" hidden>
     <h2>You're in. Welcome, neighbor!</h2>
     <p>We saved your spot on the map. Keep an eye on your inbox for the next workday, seed swap, and everything happening around the Fair.</p>
@@ -217,6 +259,6 @@
 
 <script src="assets/config.js?v=20260804d"></script>
 <script src="assets/auth.js?v=20260804d"></script>
-<script src="assets/membership.js?v=20260804d" defer></script>
+<script src="assets/membership.js?v=20260805e" defer></script>
 </body>
 </html>
