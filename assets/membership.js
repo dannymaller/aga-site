@@ -1,6 +1,7 @@
 /* Settings live in assets/config.js. Loaded before this file. */
 const CFG = window.AGA_CONFIG || {};
-const APPS_SCRIPT_URL = CFG.APPS_SCRIPT_URL || "";
+const API_URL = CFG.API_URL && CFG.API_URL.startsWith("http") ? CFG.API_URL : (CFG.APPS_SCRIPT_URL || "");
+const IS_WORKER = !!(CFG.API_URL && CFG.API_URL.startsWith("http"));
 // The form does not use Mapbox. Addresses are looked up by the Apps Script,
 // which asks the US Census geocoder.
 
@@ -161,14 +162,14 @@ async function checkAddress() {
   const parts = [street.value, $("#city").value, $("#state").value, $("#zip").value]
     .map(v => v.trim()).filter(Boolean);
 
-  if (!street.value.trim() || !$("#zip").value.trim() || !APPS_SCRIPT_URL.startsWith("http")) {
+  if (!street.value.trim() || !$("#zip").value.trim() || !API_URL.startsWith("http")) {
     setGeo("", "");
     return;
   }
 
   setGeo("looking", "Checking that address...");
   try {
-    const res = await fetch(APPS_SCRIPT_URL + "?action=geocode&q=" + encodeURIComponent(parts.join(", ")));
+    const res = await fetch(API_URL + "?action=geocode&q=" + encodeURIComponent(parts.join(", ")));
     const data = await res.json();
     if (data.found) {
       $("#lat").value = data.lat;
@@ -239,17 +240,17 @@ form.addEventListener("submit", async e => {
   statusEl.textContent = "Saving your spot...";
 
   try {
-    if (!APPS_SCRIPT_URL.startsWith("http")) {
-      throw new Error("APPS_SCRIPT_URL has not been filled in yet.");
+    if (!API_URL.startsWith("http")) {
+      throw new Error("API_URL has not been filled in yet.");
     }
-    if (!/\/exec$/.test(APPS_SCRIPT_URL)) {
+    if (!IS_WORKER && !/\/exec$/.test(API_URL)) {
       throw new Error("APPS_SCRIPT_URL should end in /exec, not /dev.");
     }
 
     // text/plain keeps this a simple request, so Apps Script sees no CORS preflight
-    const res = await fetch(APPS_SCRIPT_URL, {
+    const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      headers: { "Content-Type": IS_WORKER ? "application/json" : "text/plain;charset=utf-8" },
       body: JSON.stringify(payload)
     });
 
