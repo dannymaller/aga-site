@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tool Library | Avondale Gardening Alliance</title>
+<title>Member | Avondale Gardening Alliance</title>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="assets/base.css?v=20260804b">
 <link rel="stylesheet" href="assets/account.css?v=20260804b">
@@ -37,25 +37,73 @@
 <main id="main-content">
   <section class="lib-head">
     <div>
-      <p class="eyebrow">Tool sharing</p>
-      <h1>Your tool library</h1>
-      <p class="lede">List what you're happy to lend, approve requests from neighbors, and keep track of what's out.</p>
+      <p class="eyebrow">Member</p>
+      <h1 id="m-name">&nbsp;</h1>
+      <p class="lede" id="m-sub">&nbsp;</p>
     </div>
     <div class="lib-head-actions">
-      <a class="btn btn-outline" href="loans.html">Things I've borrowed</a>
-      <button type="button" class="btn btn-teal" id="add-tool">Add a tool</button>
+      <a class="btn btn-outline" href="map.html">Back to the map</a>
     </div>
   </section>
 
-  <p class="loading" id="loading">Loading your library...</p>
+  <p class="loading" id="loading">Loading profile...</p>
 
-  <div class="tool-grid" id="tool-grid" hidden></div>
+  <div class="loans-wrap" id="profile-wrap" hidden>
 
-  <div class="empty-lib" id="empty-lib" hidden>
-    <p>Nothing in your library yet. Add a tool and neighbors can ask to borrow it.</p>
-    <button type="button" class="btn btn-teal" id="add-first">Add your first tool</button>
+    <section class="loans-section" id="about-section" hidden>
+      <h2>About</h2>
+      <ul class="chips" id="m-interests"></ul>
+      <p class="about" id="m-about"></p>
+    </section>
+
+    <section class="loans-section" id="tools-section" hidden>
+      <h2>Happy to lend</h2>
+      <p class="sub" id="m-toolnotes"></p>
+      <div class="tool-grid profile-tools" id="m-tools"></div>
+    </section>
+
+    <section class="loans-section">
+      <h2>Reviews</h2>
+      <p class="sub" id="m-review-summary"></p>
+
+      <div id="m-owner-reviews-wrap" hidden>
+        <h3 class="rev-group">As a lender</h3>
+        <div id="m-owner-reviews"></div>
+      </div>
+
+      <div id="m-borrower-reviews-wrap" hidden>
+        <h3 class="rev-group">As a borrower</h3>
+        <div id="m-borrower-reviews"></div>
+      </div>
+
+      <p class="muted" id="m-no-reviews" hidden>No reviews yet. Their history starts with the first loan.</p>
+    </section>
+
   </div>
 </main>
+
+<div class="modal-veil" id="review-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="review-title">
+    <h2 id="review-title">Leave a review</h2>
+    <p class="borrow-sub" id="review-sub"></p>
+    <div class="star-input" id="star-input" role="radiogroup" aria-label="Rating">
+      <button type="button" data-star="1" aria-label="1 star">☆</button>
+      <button type="button" data-star="2" aria-label="2 stars">☆</button>
+      <button type="button" data-star="3" aria-label="3 stars">☆</button>
+      <button type="button" data-star="4" aria-label="4 stars">☆</button>
+      <button type="button" data-star="5" aria-label="5 stars">☆</button>
+    </div>
+    <div class="field">
+      <label for="review-comment">A few words <span class="optional">(optional)</span></label>
+      <textarea id="review-comment" maxlength="600" placeholder="How did it go?"></textarea>
+    </div>
+    <p class="modal-error" id="review-error" hidden></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close>Cancel</button>
+      <button type="button" class="btn btn-teal" id="review-send">Post review</button>
+    </div>
+  </div>
+</div>
 
 <!-- add / edit tool -->
 <div class="modal-veil" id="tool-modal" hidden>
@@ -126,6 +174,6 @@
 
 <script src="assets/config.js?v=20260804b"></script>
 <script src="assets/auth.js?v=20260804b"></script>
-<script src="assets/library.js?v=20260804b"></script>
+<script src="assets/member.js?v=20260804b"></script>
 </body>
 </html>
