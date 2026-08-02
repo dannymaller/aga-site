@@ -10,6 +10,11 @@ const DEBUG = new URLSearchParams(location.search).has("debug");
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
+/* ---------- arriving from the login card with an email in hand ---------- */
+
+const handedEmail = new URLSearchParams(location.search).get("email");
+if (handedEmail && !$("#email").value) $("#email").value = handedEmail;
+
 /* ---------- signed-in members are editing, not joining ---------- */
 
 if (window.AGA && AGA.session()) prefill();

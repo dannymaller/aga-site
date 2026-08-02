@@ -25,6 +25,63 @@ function busy(btn, on, label) {
   btn.textContent = on ? label : btn.dataset.label;
 }
 
+/* ---------- sign in with Google ----------
+   Google hands the browser an ID token. We pass it to the Apps Script, which
+   asks Google to vouch for it before trusting anything in it. */
+
+const CLIENT_ID = (window.AGA_CONFIG || {}).GOOGLE_CLIENT_ID || "";
+
+if (CLIENT_ID) waitForGoogle();
+
+function waitForGoogle(tries) {
+  tries = tries || 0;
+  if (window.google && google.accounts && google.accounts.id) return initGoogle();
+  if (tries > 40) return;                 // gave it ten seconds, carry on without it
+  setTimeout(() => waitForGoogle(tries + 1), 250);
+}
+
+function initGoogle() {
+  google.accounts.id.initialize({
+    client_id: CLIENT_ID,
+    callback: onGoogleCredential,
+    cancel_on_tap_outside: true
+  });
+  google.accounts.id.renderButton($("#google-btn"), {
+    theme: "outline",
+    size: "large",
+    shape: "rectangular",
+    text: "continue_with",
+    width: 340,
+    logo_alignment: "center"
+  });
+  $("#google-wrap").hidden = false;
+  $("#or-line").hidden = false;
+}
+
+async function onGoogleCredential(response) {
+  setError("#google-error", "");
+  try {
+    const data = await AGA.call("googleSignIn", { credential: response.credential });
+
+    if (!data.ok) {
+      setError("#google-error", data.error || "That did not work. Try the emailed code instead.");
+      return;
+    }
+    if (!data.member) {
+      $("#unknown-email").textContent = data.email || "that account";
+      $("#join-link").href = "membership.html" + (data.email ? "?email=" + encodeURIComponent(data.email) : "");
+      show("step-nomember");
+      return;
+    }
+
+    AGA.save({ token: data.token, expires: data.expires, email: data.profile.email });
+    location.href = nextPage;
+  } catch (err) {
+    console.error(err);
+    setError("#google-error", AGA.debug ? err.message : "We couldn't reach the sign-in service. Try again in a moment.");
+  }
+}
+
 /* ---------- step one ---------- */
 
 $("#send-code").dataset.label = "Email me a code";
@@ -54,6 +111,7 @@ async function sendCode() {
     if (!data.member) {
       email = value;
       $("#unknown-email").textContent = value;
+      $("#join-link").href = "membership.html?email=" + encodeURIComponent(value);
       show("step-nomember");
       return;
     }

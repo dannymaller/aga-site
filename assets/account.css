@@ -22,6 +22,12 @@
   .card h2{font-family:var(--font-marker);font-weight:400;font-size:26px;margin:0 0 16px;line-height:1.2}
   .lede{margin:0 0 26px;font-size:16px;color:#4a4a4a}
 
+  .google-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:4px}
+  #google-btn{min-height:44px}
+
+  .or-line{display:flex;align-items:center;gap:14px;margin:22px 0 20px;color:#7a7a7a;font-size:14px}
+  .or-line::before,.or-line::after{content:"";flex:1 1 auto;height:2px;background:var(--line)}
+
   .field{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
   label{font-weight:600;font-size:15px}
   input[type=text],input[type=email]{
