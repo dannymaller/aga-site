@@ -10,10 +10,30 @@ const DEBUG = new URLSearchParams(location.search).has("debug");
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 
-/* ---------- arriving from the login card with an email in hand ---------- */
+/* ---------- arriving from the login card ----------
+   Google already told us who they are, so start them part way in. */
 
-const handedEmail = new URLSearchParams(location.search).get("email");
-if (handedEmail && !$("#email").value) $("#email").value = handedEmail;
+const handoff = new URLSearchParams(location.search);
+const pendingGoogle = (() => {
+  try { return sessionStorage.getItem("aga_pending_google"); } catch (e) { return null; }
+})();
+
+["email", "first", "last"].forEach(key => {
+  const value = handoff.get(key);
+  const field = $("#" + key);
+  if (value && field && !field.value) field.value = value;
+});
+
+if (pendingGoogle && handoff.get("email")) {
+  const note = $("#google-note");
+  if (note) {
+    $("#google-note-email").textContent = handoff.get("email");
+    note.hidden = false;
+  }
+  // Their Google account owns this address, so no need to let them edit it
+  $("#email").readOnly = true;
+  $("#email").classList.add("locked");
+}
 
 /* ---------- signed-in members are editing, not joining ---------- */
 
@@ -251,7 +271,23 @@ form.addEventListener("submit", async e => {
   }
 });
 
-function finish() {
+async function finish() {
+  // Joined through Google? Sign them straight in rather than sending them
+  // back around the login screen.
+  if (pendingGoogle) {
+    try {
+      const data = await AGA.call("googleSignIn", { credential: pendingGoogle });
+      if (data.ok && data.member && data.token) {
+        try { sessionStorage.removeItem("aga_pending_google"); } catch (e) {}
+        AGA.save({ token: data.token, expires: data.expires, email: data.profile.email, profile: data.profile });
+        location.href = "dashboard.html";
+        return;
+      }
+    } catch (err) {
+      if (DEBUG) console.warn("Auto sign-in after joining failed:", err);
+    }
+  }
+
   form.hidden = true;
   $("#intro").hidden = true;
   $("#done").hidden = false;

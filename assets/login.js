@@ -8,6 +8,11 @@ let email = "";
 // Already signed in? Skip the whole screen.
 if (AGA.session()) location.replace(nextPage);
 
+function escapeHtml(s) {
+  return String(s || "").replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
 /** Covers the card while the script does its round trip. */
 function waiting(on, message) {
   const veil = $("#waiting");
@@ -79,8 +84,23 @@ async function onGoogleCredential(response) {
     }
     if (!data.member) {
       waiting(false);
-      $("#unknown-email").textContent = data.email || "that account";
-      $("#join-link").href = "membership.html" + (data.email ? "?email=" + encodeURIComponent(data.email) : "");
+
+      // Google vouched for who they are, they are just not a member yet. Keep
+      // the credential so the form can finish the job and sign them in.
+      try {
+        sessionStorage.setItem("aga_pending_google", response.credential);
+      } catch (e) { /* private browsing, they will sign in after joining */ }
+
+      const params = new URLSearchParams({ email: data.email || "" });
+      if (data.first) params.set("first", data.first);
+      if (data.last) params.set("last", data.last);
+
+      $("#nomember-title").textContent = "Almost there";
+      $("#nomember-body").innerHTML =
+        "You're signed in with Google as <strong>" + escapeHtml(data.email || "") + "</strong>, " +
+        "but you're not a member yet. Fill in a few details and you're on the map.";
+      $("#join-link").textContent = "Finish joining";
+      $("#join-link").href = "membership.html?" + params.toString();
       show("step-nomember");
       return;
     }
@@ -122,7 +142,11 @@ async function sendCode() {
     }
     if (!data.member) {
       email = value;
-      $("#unknown-email").textContent = value;
+      $("#nomember-title").textContent = "We don't have that one";
+      $("#nomember-body").innerHTML =
+        "No member is signed up with <strong>" + escapeHtml(value) + "</strong>. " +
+        "Joining takes about two minutes and it's free.";
+      $("#join-link").textContent = "Sign up now";
       $("#join-link").href = "membership.html?email=" + encodeURIComponent(value);
       show("step-nomember");
       return;
