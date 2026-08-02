@@ -34,9 +34,9 @@
 
 <main id="main-content">
   <section class="dash-head">
-    <p class="eyebrow">Member since <span id="joined">...</span></p>
+    <p class="eyebrow">Member since <span id="joined">&nbsp;</span></p>
     <h1 id="greeting">Hello, neighbor</h1>
-    <p class="lede" id="pin-status">Checking your spot on the map...</p>
+    <p class="lede" id="pin-status"><span class="spinner small" aria-hidden="true"></span> Loading your details...</p>
   </section>
 
   <div class="dash-grid">
@@ -44,10 +44,10 @@
     <section class="card panel-card">
       <h2>Your details</h2>
       <dl class="details" id="details">
-        <dt>Name</dt><dd id="d-name">...</dd>
-        <dt>Address</dt><dd id="d-address">...</dd>
-        <dt>Email</dt><dd id="d-email">...</dd>
-        <dt>Phone</dt><dd id="d-phone">...</dd>
+        <dt>Name</dt><dd id="d-name" class="skeleton">&nbsp;</dd>
+        <dt>Address</dt><dd id="d-address" class="skeleton">&nbsp;</dd>
+        <dt>Email</dt><dd id="d-email" class="skeleton">&nbsp;</dd>
+        <dt>Phone</dt><dd id="d-phone" class="skeleton">&nbsp;</dd>
       </dl>
       <p class="fineprint">Neighbors only ever see your name, your pin, and what you're up to. Your email, phone, and street number stay in the office.</p>
       <a class="btn btn-outline wide" href="membership.html">Update my details</a>
