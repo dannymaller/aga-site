@@ -111,19 +111,26 @@
   .pin.has-tools{border-color:var(--brown-dark);border-width:4px}
 
   /* ---- popup ---- */
-  .leaflet-popup-content-wrapper{border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.22)}
-  .leaflet-popup-content{font-family:var(--font-body);margin:16px 18px 18px;width:auto !important}
+  .leaflet-popup-content-wrapper{
+    border-radius:12px;
+    box-shadow:0 12px 34px rgba(0,0,0,.24);
+    border:2px solid var(--line);
+  }
+  .leaflet-popup-content{font-family:var(--font-body);margin:18px 20px 18px;line-height:1.5}
+  .leaflet-popup-tip{border:2px solid var(--line);border-top:0;border-left:0}
   .leaflet-container{font-family:var(--font-body)}
-  .leaflet-container a.leaflet-popup-close-button{color:#6b6b6b}
-  .pop h3{font-family:var(--font-marker);font-weight:400;font-size:24px;margin:0 0 8px;line-height:1.15}
-  .pop ul{margin:0 0 10px;padding-left:18px;font-size:14px}
-  .pop li{margin-bottom:3px}
+  .leaflet-container a.leaflet-popup-close-button{color:#6b6b6b;padding:10px 10px 0 0}
+  .leaflet-container a.leaflet-popup-close-button:hover{color:var(--brown-dark)}
+  .pop{min-width:230px}
+  .pop h3{font-family:var(--font-marker);font-weight:400;font-size:25px;margin:0 0 10px;line-height:1.15}
+  .pop ul{margin:0 0 12px;padding-left:17px;font-size:14.5px}
+  .pop li{margin-bottom:4px}
   .pop .about{font-size:14px;color:#4a4a4a;margin:0 0 12px}
-  .pop .tools-head{font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--brown-dark);margin:12px 0 6px}
+  .pop .tools-head{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.8px;color:var(--brown-dark);margin:14px 0 7px;padding-top:12px;border-top:2px solid var(--line)}
   .pop .tool{font-size:14px;margin-bottom:4px}
   .pop .tool span{color:#6b6b6b}
   .pop .note{font-size:13px;color:#5a5a5a;margin:8px 0 0;font-style:italic}
-  .pop .say-hi{display:inline-block;margin-top:14px;font-size:14px;font-weight:700}
+  .pop .say-hi{display:inline-block;margin-top:16px;font-size:14px;font-weight:700}
 
   @media (max-width:940px){
     .map-intro{padding-top:46px}

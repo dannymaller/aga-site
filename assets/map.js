@@ -1,7 +1,46 @@
 /* Member map. Leaflet with OpenStreetMap tiles, no API key anywhere.
    The one setting it needs lives in assets/config.js. */
 
+const CFG = window.AGA_CONFIG || {};
 const DEBUG = new URLSearchParams(location.search).has("debug");
+
+const OSM_CREDIT = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+
+const BASEMAPS = {
+  voyager: {
+    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    options: { maxZoom: 20, subdomains: "abcd", attribution: OSM_CREDIT + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }
+  },
+  positron: {
+    url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+    options: { maxZoom: 20, subdomains: "abcd", attribution: OSM_CREDIT + ' &copy; <a href="https://carto.com/attributions">CARTO</a>' }
+  },
+  osm: {
+    url: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    options: { maxZoom: 19, attribution: OSM_CREDIT }
+  }
+};
+
+function basemap() {
+  const want = (CFG.BASEMAP || "voyager").toLowerCase();
+
+  if (want === "mapbox" && (CFG.MAPBOX_TOKEN || "").startsWith("pk.")) {
+    const style = CFG.MAPBOX_STYLE || "outdoors-v12";
+    return L.tileLayer(
+      "https://api.mapbox.com/styles/v1/mapbox/" + style +
+      "/tiles/512/{z}/{x}/{y}@2x?access_token=" + CFG.MAPBOX_TOKEN,
+      {
+        maxZoom: 20,
+        zoomOffset: -1,
+        tileSize: 512,
+        attribution: '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> ' + OSM_CREDIT
+      }
+    );
+  }
+
+  const pick = BASEMAPS[want] || BASEMAPS.voyager;
+  return L.tileLayer(pick.url, pick.options);
+}
 
 // Avondale, roughly Belmont and Kedzie
 const CENTER = [41.9400, -87.7080];
@@ -54,11 +93,9 @@ function showMessage(title, body) {
 function start() {
   if (!AGA.require()) return;   // bounces to the login page
 
-  map = L.map("map", { scrollWheelZoom: false }).setView(CENTER, ZOOM);
-  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
+  map = L.map("map", { scrollWheelZoom: false, zoomControl: false }).setView(CENTER, ZOOM);
+  L.control.zoom({ position: "topright" }).addTo(map);
+  basemap().addTo(map);
 
   // Page scrolls freely until you click into the map
   map.on("click", () => map.scrollWheelZoom.enable());
@@ -101,7 +138,7 @@ function render() {
     });
     const marker = L.marker([m.lat, m.lng], { icon: icon, title: m.name, alt: m.name })
       .addTo(map)
-      .bindPopup(popupHTML(m), { maxWidth: 280 });
+      .bindPopup(popupHTML(m), { maxWidth: 340, minWidth: 260, autoPanPadding: [30, 30] });
     markers.set(m.id, marker);
   });
 

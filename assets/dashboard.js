@@ -4,8 +4,6 @@ const $ = (s, r = document) => r.querySelector(s);
 
 if (AGA.require()) load();
 
-$("#sign-out").addEventListener("click", () => AGA.signOut());
-
 async function load() {
   try {
     const data = await AGA.authed("me");

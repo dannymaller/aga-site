@@ -114,16 +114,30 @@
    * browser has forgotten the session, they land back on the card and sign in
    * again.
    */
-  function pointAccountLinks() {
-    if (!AGA.session()) return;
-    document.querySelectorAll("[data-account-link]").forEach(function (a) {
-      a.href = "dashboard.html";
+  function paintAccountUI() {
+    var signedIn = !!AGA.session();
+
+    if (signedIn) {
+      document.querySelectorAll("[data-account-link]").forEach(function (a) {
+        a.href = "dashboard.html";
+      });
+    }
+
+    // Sign out only exists for people who are signed in
+    document.querySelectorAll("[data-signout]").forEach(function (b) {
+      b.hidden = !signedIn;
+      if (signedIn) b.addEventListener("click", function () { AGA.signOut(); });
+    });
+
+    // and Become a Member is for people who are not
+    document.querySelectorAll("[data-join-cta]").forEach(function (a) {
+      a.hidden = signedIn;
     });
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", pointAccountLinks);
+    document.addEventListener("DOMContentLoaded", paintAccountUI);
   } else {
-    pointAccountLinks();
+    paintAccountUI();
   }
 })();
