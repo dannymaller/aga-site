@@ -2,27 +2,19 @@
 
 const $ = (s, r = document) => r.querySelector(s);
 
-if (AGA.require()) {
-  // Sign-in already handed us the profile, so paint it now rather than waiting
-  // on another round trip to the script.
-  const cached = AGA.cachedProfile();
-  if (cached) paint(cached);
-  load(!!cached);
-}
+if (AGA.require()) load();
 
-async function load(alreadyPainted) {
+async function load() {
   try {
-    const fresh = await AGA.refreshProfile();
-    if (fresh) {
-      paint(fresh);
+    const data = await AGA.authed("me");
+    if (!data || !data.ok || !data.profile) {
+      $("#greeting").textContent = "We couldn't find your record";
+      $("#pin-status").textContent = "Try signing in again, or email us and we'll sort it out.";
       return;
     }
-    if (alreadyPainted) return;   // stale copy on screen beats an error
-    $("#greeting").textContent = "We couldn't find your record";
-    $("#pin-status").textContent = "Try signing in again, or email us and we'll sort it out.";
+    paint(data.profile);
   } catch (err) {
     console.error(err);
-    if (alreadyPainted) return;
     $("#greeting").textContent = "Something went wrong";
     $("#pin-status").textContent = AGA.debug ? err.message : "Try a refresh in a moment.";
   }
@@ -30,7 +22,6 @@ async function load(alreadyPainted) {
 
 function paint(p) {
   const name = [p.first, p.last].filter(Boolean).join(" ");
-  document.querySelectorAll(".skeleton").forEach(el => el.classList.remove("skeleton"));
 
   $("#greeting").textContent = "Hello, " + (p.first || "neighbor");
   $("#joined").textContent = p.joined
