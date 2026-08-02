@@ -111,13 +111,9 @@ function showMessage(title, body) {
 function start() {
   if (!AGA.require()) return;   // bounces to the login page
 
-  map = L.map("map", { scrollWheelZoom: false, zoomControl: false }).setView(CENTER, ZOOM);
+  map = L.map("map", { scrollWheelZoom: true, zoomControl: false }).setView(CENTER, ZOOM);
   L.control.zoom({ position: "topright" }).addTo(map);
   basemap().addTo(map);
-
-  // Page scrolls freely until you click into the map
-  map.on("click", () => map.scrollWheelZoom.enable());
-  map.on("mouseout", () => map.scrollWheelZoom.disable());
 
   load();
 }
