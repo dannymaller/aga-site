@@ -3,15 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Member Map | Avondale Gardening Alliance</title>
-<meta name="description" content="See who is growing what around Avondale. Find neighbors with gardens, neighbors looking for space, and members sharing tools.">
+<title>My Loans | Avondale Gardening Alliance</title>
+<meta name="robots" content="noindex">
 <link rel="stylesheet" href="assets/base.css?v=20260803a">
-<link rel="stylesheet" href="assets/map.css?v=20260803a">
+<link rel="stylesheet" href="assets/account.css?v=20260803a">
 <link rel="stylesheet" href="assets/library.css?v=20260803a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/leaflet/leaflet.css?v=20260803a">
 </head>
 <body>
 <a class="skip" href="#main-content">Skip to content</a>
@@ -25,7 +24,7 @@
     <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
     <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
     <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
-    <a class="nav-map" href="map.html" aria-current="page">Map</a>
+    <a class="nav-map" href="map.html">Map</a>
     <a class="nav-library" href="library.html">Tools</a>
     <a class="nav-membership" data-account-link href="login.html">Membership</a>
   </nav>
@@ -36,59 +35,93 @@
 </header>
 
 <main id="main-content">
-  <section class="map-intro">
-    <h1>Who's growing what</h1>
-    <p>Every pin is a member. Click one to see what they're up to and what they're happy to lend out.</p>
+  <section class="lib-head">
+    <div>
+      <p class="eyebrow">Tool sharing</p>
+      <h1>Borrowing and lending</h1>
+      <p class="lede">Requests you've made, tools you've lent out, and reviews once things come back.</p>
+    </div>
+    <div class="lib-head-actions">
+      <a class="btn btn-teal" href="library.html">My tool library</a>
+      <a class="btn btn-outline" href="map.html">Find tools on the map</a>
+    </div>
   </section>
 
-  <div class="map-shell">
-    <aside class="panel" aria-label="Member filters and list">
-      <div class="panel-body">
-      <button type="button" class="chip chip-all is-on" data-filter="all" aria-pressed="true">Everyone</button>
+  <p class="loading" id="loading">Loading...</p>
 
-      <div class="filter-group">
-        <p class="filter-label">In the garden</p>
-        <div class="filters" role="group" aria-label="Filter by what members are up to">
-          <button type="button" class="chip" data-garden="garden" aria-pressed="false">Has a garden</button>
-          <button type="button" class="chip" data-garden="space" aria-pressed="false">Needs space</button>
-          <button type="button" class="chip" data-garden="help" aria-pressed="false">Wants a hand</button>
-          <button type="button" class="chip" data-garden="helper" aria-pressed="false">Offering help</button>
-          <button type="button" class="chip" data-garden="starting" aria-pressed="false">Just starting out</button>
-          <button type="button" class="chip" data-garden="seeds" aria-pressed="false">Shares seeds</button>
-        </div>
-      </div>
+  <div class="loans-wrap" id="loans-wrap" hidden>
+    <section class="loans-section">
+      <h2>Things I've borrowed</h2>
+      <p class="sub">Tools you've asked other members for.</p>
+      <div id="borrowing"></div>
+    </section>
 
-      <div class="filter-group filter-group-tools" id="tool-filters" hidden>
-        <p class="filter-label">Tool sharing</p>
-        <div class="filters" role="group" aria-label="Filter by tools shared"></div>
-      </div>
-
-      <p class="count" id="count" aria-live="polite">Loading members...</p>
-
-      <ul class="member-list" id="member-list"></ul>
-      </div>
-
-      <div class="panel-foot">
-        <a class="btn btn-teal" href="membership.html">Add yourself to the map</a>
-        <p class="pin-key">
-          <span><i class="k-garden"></i>Gardening</span>
-          <span><i class="k-tools"></i>Lends tools</span>
-        </p>
-      </div>
-    </aside>
-
-    <div class="map-wrap">
-      <div id="map" role="application" aria-label="Map of Avondale Gardening Alliance members"></div>
-
-      <div class="map-message" id="map-message" hidden>
-        <div>
-          <h2 id="map-message-title">Map unavailable</h2>
-          <p id="map-message-body"></p>
-        </div>
-      </div>
-    </div>
+    <section class="loans-section">
+      <h2>Things I've lent</h2>
+      <p class="sub">Your tools that have gone out. Manage active loans in <a href="library.html">your library</a>.</p>
+      <div id="lending"></div>
+    </section>
   </div>
 </main>
+
+<div class="modal-veil" id="review-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="review-title">
+    <h2 id="review-title">Leave a review</h2>
+    <p class="borrow-sub" id="review-sub"></p>
+    <div class="star-input" id="star-input" role="radiogroup" aria-label="Rating">
+      <button type="button" data-star="1" aria-label="1 star">☆</button>
+      <button type="button" data-star="2" aria-label="2 stars">☆</button>
+      <button type="button" data-star="3" aria-label="3 stars">☆</button>
+      <button type="button" data-star="4" aria-label="4 stars">☆</button>
+      <button type="button" data-star="5" aria-label="5 stars">☆</button>
+    </div>
+    <div class="field">
+      <label for="review-comment">A few words <span class="optional">(optional)</span></label>
+      <textarea id="review-comment" maxlength="600" placeholder="How did it go?"></textarea>
+    </div>
+    <p class="modal-error" id="review-error" hidden></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close>Cancel</button>
+      <button type="button" class="btn btn-teal" id="review-send">Post review</button>
+    </div>
+  </div>
+</div>
+
+<!-- add / edit tool -->
+<div class="modal-veil" id="tool-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="tool-modal-title">
+    <h2 id="tool-modal-title">Add a tool</h2>
+    <div class="field">
+      <label for="t-name">What is it?</label>
+      <input id="t-name" type="text" placeholder="Wheelbarrow" maxlength="80">
+    </div>
+    <div class="field">
+      <label for="t-cat">Category</label>
+      <select id="t-cat"></select>
+    </div>
+    <div class="field">
+      <label for="t-notes">Notes <span class="optional">(optional)</span></label>
+      <input id="t-notes" type="text" placeholder="Flat tire but still rolls" maxlength="140">
+    </div>
+    <p class="modal-error" id="tool-error" hidden></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close>Cancel</button>
+      <button type="button" class="btn btn-teal" id="save-tool">Save tool</button>
+    </div>
+  </div>
+</div>
+
+<!-- confirm -->
+<div class="modal-veil" id="confirm-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <h2 id="confirm-title">Are you sure?</h2>
+    <p id="confirm-body"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close>Never mind</button>
+      <button type="button" class="btn btn-brown" id="confirm-go">Yes, do it</button>
+    </div>
+  </div>
+</div>
 
 <img class="footer-tear" src="assets/torn.png" alt="">
 <footer>
@@ -121,9 +154,8 @@
   </div>
 </footer>
 
-<script src="assets/leaflet/leaflet.js?v=20260803a"></script>
 <script src="assets/config.js?v=20260803a"></script>
 <script src="assets/auth.js?v=20260803a"></script>
-<script src="assets/map.js?v=20260803a" defer></script>
+<script src="assets/loans.js?v=20260803a"></script>
 </body>
 </html>
