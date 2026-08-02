@@ -35,6 +35,26 @@
       localStorage.setItem(KEY, JSON.stringify(session));
     },
 
+    /** The profile sign-in already returned, so pages can paint immediately. */
+    cachedProfile() {
+      const s = this.session();
+      return s && s.profile ? s.profile : null;
+    },
+
+    /** Quietly refresh the cached copy after a page has painted. */
+    async refreshProfile() {
+      const data = await this.authed("me");
+      if (data && data.ok && data.profile) {
+        const s = this.session();
+        if (s) {
+          s.profile = data.profile;
+          this.save(s);
+        }
+        return data.profile;
+      }
+      return null;
+    },
+
     forget() {
       localStorage.removeItem(KEY);
     },
@@ -108,30 +128,45 @@
   window.AGA = AGA;
 
   /**
-   * One Membership tab for everybody. The markup points it at the login card,
-   * which is what a signed-out visitor should see. When a session is found it
-   * gets repointed at the dashboard, so members skip the login screen. If the
-   * browser has forgotten the session, they land back on the card and sign in
-   * again.
+   * The header adapts to whether someone is signed in.
+   *
+   * - Map and Tools (marked data-member-only) are hidden until sign-in, since
+   *   both need a session to show anything.
+   * - The top-right CTA is the single account entry point. Signed out it reads
+   *   Become a Member and opens the login card, where joining begins. Signed in
+   *   it reads My AGA and opens the dashboard.
+   * - Sign out shows only when signed in.
    */
   function paintAccountUI() {
     var signedIn = !!AGA.session();
 
+    // Member-only nav items appear once there is a session
+    document.querySelectorAll("[data-member-only]").forEach(function (el) {
+      el.hidden = !signedIn;
+    });
+
+    // Legacy account links still get repointed if any remain
     if (signedIn) {
       document.querySelectorAll("[data-account-link]").forEach(function (a) {
         a.href = "dashboard.html";
       });
     }
 
+    // The one header CTA: label and destination follow the session
+    document.querySelectorAll("[data-account-cta]").forEach(function (a) {
+      if (signedIn) {
+        a.textContent = "My AGA";
+        a.href = "dashboard.html";
+      } else {
+        a.textContent = "Become a Member";
+        a.href = "login.html";
+      }
+    });
+
     // Sign out only exists for people who are signed in
     document.querySelectorAll("[data-signout]").forEach(function (b) {
       b.hidden = !signedIn;
       if (signedIn) b.addEventListener("click", function () { AGA.signOut(); });
-    });
-
-    // and Become a Member is for people who are not
-    document.querySelectorAll("[data-join-cta]").forEach(function (a) {
-      a.hidden = signedIn;
     });
   }
 
