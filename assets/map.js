@@ -244,11 +244,16 @@ function popupHTML(m) {
       '<div class="pop-section">' +
         '<p class="pop-label">Happy to lend</p>' +
         '<ul class="pop-tools">' +
-          m.tools.map(t =>
-            "<li><span class=\"t-name\">" + esc(t.tool) + "</span>" +
-            (t.notes ? '<span class="t-note">' + esc(t.notes) + "</span>" : "") +
-            "</li>"
-          ).join("") +
+          m.tools.map(t => {
+            const askable = t.id && t.status !== "on loan" && t.status !== "paused";
+            return "<li><span class=\"t-name\">" + esc(t.tool) + "</span>" +
+              (t.notes ? '<span class="t-note">' + esc(t.notes) + "</span>" : "") +
+              (askable
+                ? '<button type="button" class="t-ask" data-ask="' + esc(t.id) +
+                  '" data-toolname="' + esc(t.tool) + '" data-owner="' + esc(m.name) + '">Ask to borrow</button>'
+                : (t.id ? '<span class="t-out">' + (t.status === "on loan" ? "On loan" : "Paused") + "</span>" : "")) +
+              "</li>";
+          }).join("") +
         "</ul>" +
         (m.toolNotes ? '<p class="pop-pickup">' + esc(m.toolNotes) + "</p>" : "") +
       "</div>";
@@ -261,6 +266,91 @@ function popupHTML(m) {
         encodeURIComponent("Hello to " + m.name + " from the member map") +
       '">Say hello through AGA</a>' +
     "</div>";
+}
+
+function openBorrow(toolId, toolName, ownerName) {
+  if (!AGA.session()) { location.href = "login.html?next=map.html"; return; }
+  ensureBorrowModal();
+  $("#borrow-tool").textContent = toolName;
+  $("#borrow-owner").textContent = ownerName;
+  $("#borrow-msg").value = "";
+  $("#borrow-due").value = "";
+  $("#borrow-consent").checked = false;
+  $("#borrow-error").hidden = true;
+  $("#borrow-modal").dataset.toolId = toolId;
+  $("#borrow-modal").hidden = false;
+}
+
+function ensureBorrowModal() {
+  if ($("#borrow-modal")) return;
+  const veil = document.createElement("div");
+  veil.className = "modal-veil";
+  veil.id = "borrow-modal";
+  veil.hidden = true;
+  veil.innerHTML =
+    '<div class="modal" role="dialog" aria-modal="true" aria-labelledby="borrow-title">' +
+      '<h2 id="borrow-title">Ask to borrow</h2>' +
+      '<p class="borrow-sub">You are asking <strong id="borrow-owner"></strong> for their <strong id="borrow-tool"></strong>. ' +
+        'They will get an email and can say yes or no.</p>' +
+      '<div class="field"><label for="borrow-due">Return it by <span class="optional">(optional)</span></label>' +
+        '<input id="borrow-due" type="date"></div>' +
+      '<div class="field"><label for="borrow-msg">A note <span class="optional">(optional)</span></label>' +
+        '<textarea id="borrow-msg" maxlength="500" placeholder="What you need it for, when you could pick it up..."></textarea></div>' +
+      '<div class="disclaimer">Borrowing is between you and the owner. The Avondale Gardening Alliance just runs the board. ' +
+        'AGA is not responsible for lost, damaged, or stolen tools, for injuries, or for any dispute between members. ' +
+        'Take care of what you borrow and return it as agreed.</div>' +
+      '<label class="consent-row"><input type="checkbox" id="borrow-consent">' +
+        '<span>I understand AGA is not liable and I agree to these terms.</span></label>' +
+      '<p class="modal-error" id="borrow-error" hidden></p>' +
+      '<div class="modal-actions">' +
+        '<button type="button" class="btn btn-outline" id="borrow-cancel">Cancel</button>' +
+        '<button type="button" class="btn btn-teal" id="borrow-send">Send request</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(veil);
+
+  veil.addEventListener("click", e => { if (e.target === veil) veil.hidden = true; });
+  $("#borrow-cancel").addEventListener("click", () => veil.hidden = true);
+  $("#borrow-send").addEventListener("click", sendBorrow);
+}
+
+async function sendBorrow() {
+  const modal = $("#borrow-modal");
+  const toolId = modal.dataset.toolId;
+
+  if (!$("#borrow-consent").checked) {
+    const e = $("#borrow-error");
+    e.textContent = "Please agree to the lending terms first.";
+    e.hidden = false;
+    return;
+  }
+
+  const btn = $("#borrow-send");
+  btn.disabled = true;
+  try {
+    const data = await AGA.authed("requestLoan", {
+      toolId,
+      message: $("#borrow-msg").value.trim(),
+      due: $("#borrow-due").value || "",
+      consent: true
+    });
+    if (!data) return;
+    if (!data.ok) {
+      const e = $("#borrow-error");
+      e.textContent = data.error || "Couldn't send that.";
+      e.hidden = false;
+      return;
+    }
+    modal.hidden = true;
+    if (map) map.closePopup();
+    alert("Request sent. " + $("#borrow-owner").textContent + " will get an email.");
+  } catch (err) {
+    const e = $("#borrow-error");
+    e.textContent = AGA.debug ? err.message : "Couldn't reach the server.";
+    e.hidden = false;
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 function focusMember(m) {
@@ -306,5 +396,10 @@ $$("[data-garden]").forEach(chip => {
   chip.addEventListener("click", () => toggle(gardenFilters, chip.dataset.garden));
 });
 $('[data-filter="all"]').addEventListener("click", clearFilters);
+
+document.addEventListener("click", e => {
+  const btn = e.target.closest("[data-ask]");
+  if (btn) openBorrow(btn.dataset.ask, btn.dataset.toolname, btn.dataset.owner);
+});
 
 start();
