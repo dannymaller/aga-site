@@ -35,6 +35,26 @@
       localStorage.setItem(KEY, JSON.stringify(session));
     },
 
+    /** The profile sign-in already returned, so pages can paint immediately. */
+    cachedProfile() {
+      const s = this.session();
+      return s && s.profile ? s.profile : null;
+    },
+
+    /** Quietly refresh the cached copy after a page has painted. */
+    async refreshProfile() {
+      const data = await this.authed("me");
+      if (data && data.ok && data.profile) {
+        const s = this.session();
+        if (s) {
+          s.profile = data.profile;
+          this.save(s);
+        }
+        return data.profile;
+      }
+      return null;
+    },
+
     forget() {
       localStorage.removeItem(KEY);
     },

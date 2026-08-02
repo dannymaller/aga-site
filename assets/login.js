@@ -8,6 +8,14 @@ let email = "";
 // Already signed in? Skip the whole screen.
 if (AGA.session()) location.replace(nextPage);
 
+/** Covers the card while the script does its round trip. */
+function waiting(on, message) {
+  const veil = $("#waiting");
+  if (!veil) return;
+  if (message) $("#waiting-text").textContent = message;
+  veil.hidden = !on;
+}
+
 function show(step) {
   ["step-email", "step-code", "step-nomember"].forEach(id => {
     $("#" + id).hidden = id !== step;
@@ -60,24 +68,28 @@ function initGoogle() {
 
 async function onGoogleCredential(response) {
   setError("#google-error", "");
+  waiting(true, "Signing you in...");
   try {
     const data = await AGA.call("googleSignIn", { credential: response.credential });
 
     if (!data.ok) {
+      waiting(false);
       setError("#google-error", data.error || "That did not work. Try the emailed code instead.");
       return;
     }
     if (!data.member) {
+      waiting(false);
       $("#unknown-email").textContent = data.email || "that account";
       $("#join-link").href = "membership.html" + (data.email ? "?email=" + encodeURIComponent(data.email) : "");
       show("step-nomember");
       return;
     }
 
-    AGA.save({ token: data.token, expires: data.expires, email: data.profile.email });
+    AGA.save({ token: data.token, expires: data.expires, email: data.profile.email, profile: data.profile });
     location.href = nextPage;
   } catch (err) {
     console.error(err);
+    waiting(false);
     setError("#google-error", AGA.debug ? err.message : "We couldn't reach the sign-in service. Try again in a moment.");
   }
 }
@@ -148,20 +160,23 @@ async function verify() {
 
   const btn = $("#verify");
   busy(btn, true, "Checking...");
+  waiting(true, "Signing you in...");
 
   try {
     const data = await AGA.call("verifyCode", { email: email, code: code });
 
     if (!data.ok) {
+      waiting(false);
       setError("#code-error", data.error || "That code did not work.");
       $("#code").select();
       return;
     }
 
-    AGA.save({ token: data.token, expires: data.expires, email: email });
+    AGA.save({ token: data.token, expires: data.expires, email: email, profile: data.profile });
     location.href = nextPage;
   } catch (err) {
     console.error(err);
+    waiting(false);
     setError("#code-error", AGA.debug ? err.message : "We couldn't reach the sign-in service. Try again in a moment.");
   } finally {
     busy(btn, false);
