@@ -52,29 +52,47 @@ const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 let map = null;
 let members = [];
 let markers = new Map();
-let activeFilter = "all";
+let gardenFilters = new Set();
+let toolFilters = new Set();
 
 /* Interests arrive as free text from the sheet, so match on keywords. */
 const MATCHERS = {
-  garden: t => t.includes("have a garden"),
-  space: t => t.includes("no space"),
-  help: t => t.includes("could use help"),
-  helper: t => t.includes("want to help") || t.includes("just getting started")
+  garden:   t => t.includes("have a garden"),
+  space:    t => t.includes("no space"),
+  help:     t => t.includes("could use help"),
+  helper:   t => t.includes("want to help"),
+  starting: t => t.includes("just getting started"),
+  seeds:    t => t.includes("seeds")
 };
 
-function kindOf(m) {
-  const t = m.interests.join(" ").toLowerCase();
-  if (MATCHERS.garden(t)) return "garden";
-  if (MATCHERS.space(t)) return "space";
-  if (MATCHERS.help(t)) return "help";
-  return "other";
+function lends(m) {
+  return m.toolSharing && m.tools.length > 0;
 }
 
-function matches(m, filter) {
-  if (filter === "all") return true;
-  if (filter === "tools") return m.toolSharing && m.tools.length > 0;
-  const t = m.interests.join(" ").toLowerCase();
-  return MATCHERS[filter] ? MATCHERS[filter](t) : true;
+function matchesTool(m, filter) {
+  if (!lends(m)) return false;
+  if (filter === "any") return true;
+  return m.tools.some(t => (t.category || "Other") === filter);
+}
+
+/**
+ * Within a group, any selected chip counts. Across the two groups both have to
+ * agree, so Has a garden plus Ladders means gardeners who lend ladders.
+ */
+function matches(m) {
+  const text = m.interests.join(" ").toLowerCase();
+
+  const gardenOk = !gardenFilters.size ||
+    [...gardenFilters].some(f => MATCHERS[f] && MATCHERS[f](text));
+
+  const toolOk = !toolFilters.size ||
+    [...toolFilters].some(f => matchesTool(m, f));
+
+  return gardenOk && toolOk;
+}
+
+function anyFilterOn() {
+  return gardenFilters.size > 0 || toolFilters.size > 0;
 }
 
 function esc(s) {
@@ -111,6 +129,7 @@ async function load() {
     if (!data.ok) throw new Error(data.error || "Could not read the member list.");
 
     members = (data.members || []).filter(m => m.lat && m.lng);
+    buildToolFilters();
     render();
   } catch (err) {
     console.error("Map load failed:", err);
@@ -119,10 +138,42 @@ async function load() {
   }
 }
 
+/** Builds the tool chips from the categories members actually listed. */
+function buildToolFilters() {
+  const box = $("#tool-filters");
+  const row = $(".filters", box);
+  const categories = new Set();
+
+  members.forEach(m => {
+    if (lends(m)) m.tools.forEach(t => categories.add(t.category || "Other"));
+  });
+
+  if (!categories.size) {
+    box.hidden = true;
+    return;
+  }
+
+  row.innerHTML = "";
+  const options = ["any", ...[...categories].sort()];
+
+  options.forEach(value => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip";
+    chip.dataset.tool = value;
+    chip.setAttribute("aria-pressed", "false");
+    chip.textContent = value === "any" ? "Shares any tools" : value;
+    chip.addEventListener("click", () => toggle(toolFilters, value));
+    row.appendChild(chip);
+  });
+
+  box.hidden = false;
+}
+
 /* ---------- rendering ---------- */
 
 function render() {
-  const shown = members.filter(m => matches(m, activeFilter));
+  const shown = members.filter(matches);
 
   markers.forEach(mk => map.removeLayer(mk));
   markers = new Map();
@@ -130,11 +181,10 @@ function render() {
   shown.forEach(m => {
     const icon = L.divIcon({
       className: "",
-      html: '<span class="pin pin-' + kindOf(m) +
-        (m.toolSharing && m.tools.length ? " has-tools" : "") + '"></span>',
-      iconSize: [20, 20],
-      iconAnchor: [10, 10],
-      popupAnchor: [0, -12]
+      html: '<span class="pin"></span>',
+      iconSize: [22, 22],
+      iconAnchor: [11, 11],
+      popupAnchor: [0, -13]
     });
     const marker = L.marker([m.lat, m.lng], { icon: icon, title: m.name, alt: m.name })
       .addTo(map)
@@ -159,7 +209,7 @@ function render() {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.innerHTML =
-      '<span class="who"><i class="dot dot-' + kindOf(m) + '"></i>' + esc(m.name) + "</span>" +
+      '<span class="who">' + esc(m.name) + "</span>" +
       '<span class="tags">' + esc(m.interests.join(" \u00b7 ") || "Member") + "</span>" +
       (m.toolSharing && m.tools.length
         ? '<span class="tools-flag">' + m.tools.length + (m.tools.length === 1 ? " tool" : " tools") + " to share</span>"
@@ -171,7 +221,7 @@ function render() {
 
   const n = shown.length;
   $("#count").textContent = members.length
-    ? n + (n === 1 ? " member" : " members") + (activeFilter === "all" ? " on the map" : " match")
+    ? n + (n === 1 ? " member" : " members") + (anyFilterOn() ? " match" : " on the map")
     : "";
 
   if (shown.length > 1) {
@@ -182,23 +232,35 @@ function render() {
 }
 
 function popupHTML(m) {
-  let html = '<div class="pop"><h3>' + esc(m.name) + "</h3>";
-  if (m.interests.length) {
-    html += "<ul>" + m.interests.map(i => "<li>" + esc(i) + "</li>").join("") + "</ul>";
-  }
-  if (m.about) html += '<p class="about">' + esc(m.about) + "</p>";
+  const tags = m.interests.length
+    ? '<ul class="pop-tags">' + m.interests.map(i => "<li>" + esc(i) + "</li>").join("") + "</ul>"
+    : "";
+
+  const about = m.about ? '<p class="pop-about">' + esc(m.about) + "</p>" : "";
+
+  let tools = "";
   if (m.toolSharing && m.tools.length) {
-    html += '<p class="tools-head">Happy to lend</p>';
-    html += m.tools.map(t =>
-      '<div class="tool">' + esc(t.tool) +
-      (t.notes ? ' <span>(' + esc(t.notes) + ")</span>" : "") + "</div>"
-    ).join("");
-    if (m.toolNotes) html += '<p class="note">' + esc(m.toolNotes) + "</p>";
+    tools =
+      '<div class="pop-section">' +
+        '<p class="pop-label">Happy to lend</p>' +
+        '<ul class="pop-tools">' +
+          m.tools.map(t =>
+            "<li><span class=\"t-name\">" + esc(t.tool) + "</span>" +
+            (t.notes ? '<span class="t-note">' + esc(t.notes) + "</span>" : "") +
+            "</li>"
+          ).join("") +
+        "</ul>" +
+        (m.toolNotes ? '<p class="pop-pickup">' + esc(m.toolNotes) + "</p>" : "") +
+      "</div>";
   }
-  html += '<a class="say-hi" href="mailto:avondalegardeners@gmail.com?subject=' +
-    encodeURIComponent("Hello to " + m.name + " from the member map") +
-    '">Say hello through AGA</a>';
-  return html + "</div>";
+
+  return '<div class="pop">' +
+      '<h3 class="pop-name">' + esc(m.name) + "</h3>" +
+      tags + about + tools +
+      '<a class="pop-cta" href="mailto:avondalegardeners@gmail.com?subject=' +
+        encodeURIComponent("Hello to " + m.name + " from the member map") +
+      '">Say hello through AGA</a>' +
+    "</div>";
 }
 
 function focusMember(m) {
@@ -210,13 +272,39 @@ function focusMember(m) {
 
 /* ---------- filters ---------- */
 
-$$(".chip").forEach(chip => {
-  chip.addEventListener("click", () => {
-    $$(".chip").forEach(c => c.classList.remove("is-on"));
-    chip.classList.add("is-on");
-    activeFilter = chip.dataset.filter;
-    render();
+function toggle(set, value) {
+  if (set.has(value)) set.delete(value);
+  else set.add(value);
+  paintChips();
+  render();
+}
+
+function clearFilters() {
+  gardenFilters.clear();
+  toolFilters.clear();
+  paintChips();
+  render();
+}
+
+function paintChips() {
+  $$("[data-garden]").forEach(c => {
+    const on = gardenFilters.has(c.dataset.garden);
+    c.classList.toggle("is-on", on);
+    c.setAttribute("aria-pressed", String(on));
   });
+  $$("[data-tool]").forEach(c => {
+    const on = toolFilters.has(c.dataset.tool);
+    c.classList.toggle("is-on", on);
+    c.setAttribute("aria-pressed", String(on));
+  });
+  const all = $('[data-filter="all"]');
+  all.classList.toggle("is-on", !anyFilterOn());
+  all.setAttribute("aria-pressed", String(!anyFilterOn()));
+}
+
+$$("[data-garden]").forEach(chip => {
+  chip.addEventListener("click", () => toggle(gardenFilters, chip.dataset.garden));
 });
+$('[data-filter="all"]').addEventListener("click", clearFilters);
 
 start();
