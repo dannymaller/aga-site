@@ -91,7 +91,16 @@ async function onGoogleCredential(response) {
         sessionStorage.setItem("aga_pending_google", response.credential);
       } catch (e) { /* private browsing, they will sign in after joining */ }
 
-      const params = new URLSearchParams({ email: data.email || "" });
+      if (!data.email) {
+        // The script answered without an address, which means the deployed
+        // version is older than this page expects.
+        setError("#google-error", AGA.debug
+          ? "The script replied with no email address. Deploy a new version of Code.gs. Reported version: " + (data.version || "none")
+          : "Sign-in is having a moment. Try the emailed code below.");
+        return;
+      }
+
+      const params = new URLSearchParams({ email: data.email });
       if (data.first) params.set("first", data.first);
       if (data.last) params.set("last", data.last);
 
