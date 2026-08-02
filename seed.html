@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seed | Avondale Gardening Alliance</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/base.css?v=20260805f">
+<link rel="stylesheet" href="assets/account.css?v=20260805f">
+<link rel="stylesheet" href="assets/seeds.css?v=20260805f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+<a class="skip" href="#main-content">Skip to content</a>
+
+<header class="masthead">
+  <a class="logo" href="index.html" aria-label="Avondale Gardening Alliance home">
+    <img src="assets/logo.png" alt="Avondale Gardening Alliance">
+  </a>
+  <nav class="mainnav" aria-label="Main">
+    <a class="nav-about" href="https://avondalegardeners.org/about">About</a>
+    <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
+    <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
+    <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
+    <a class="nav-map" data-member-only hidden href="map.html">Map</a>
+    <a class="nav-library" data-member-only hidden href="library.html">Tools</a>
+    <a class="nav-seeds" data-member-only hidden href="seeds.html">Seeds</a>
+  </nav>
+  <div class="head-actions">
+    <button type="button" class="btn btn-brown" data-signout hidden>Sign out</button>
+    <a class="btn btn-teal" data-account-cta data-join-cta href="login.html">Become a Member</a>
+    <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
+  </div>
+</header>
+
+<main id="main-content" class="seed-detail">
+  <p class="loading" id="loading">Loading...</p>
+
+  <div id="detail" hidden>
+    <a class="back-link" href="seeds.html">&larr; All seeds</a>
+
+    <section class="detail-head">
+      <div class="detail-tile" id="detail-tile"><span id="detail-tile-name"></span></div>
+      <div class="detail-intro">
+        <p class="eyebrow" id="detail-cat"></p>
+        <h1 id="detail-name"></h1>
+        <p class="seed-stars-lg" id="detail-stars" hidden></p>
+        <p class="lede" id="detail-blurb"></p>
+        <a class="btn btn-teal" href="#givers" id="jump-givers">See who has it</a>
+      </div>
+    </section>
+
+    <section class="grow-panel">
+      <h2>How to grow it in Chicago</h2>
+      <dl class="grow-grid" id="grow-grid"></dl>
+    </section>
+
+    <section class="givers" id="givers">
+      <h2 id="givers-title">Neighbors sharing this seed</h2>
+      <p class="givers-none" id="givers-none" hidden>No one has this one listed right now. Check back, or add it yourself if you've got some.</p>
+      <ul class="giver-list" id="giver-list"></ul>
+    </section>
+
+    <section class="seed-reviews" id="seed-reviews" hidden>
+      <h2>What members said</h2>
+      <ul class="review-list" id="review-list"></ul>
+    </section>
+  </div>
+</main>
+
+<!-- leave a review of a giver -->
+<div class="modal-veil" id="review-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="review-title">
+    <h2 id="review-title">Review this giver</h2>
+    <p>How did the seeds work out? Your review helps other members.</p>
+    <div class="field">
+      <label>Rating</label>
+      <div class="star-picker" id="star-picker">
+        <button type="button" data-star="1" aria-label="1 star">&#9733;</button>
+        <button type="button" data-star="2" aria-label="2 stars">&#9733;</button>
+        <button type="button" data-star="3" aria-label="3 stars">&#9733;</button>
+        <button type="button" data-star="4" aria-label="4 stars">&#9733;</button>
+        <button type="button" data-star="5" aria-label="5 stars">&#9733;</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="review-comment">A note <span class="optional">(optional)</span></label>
+      <textarea id="review-comment" rows="3" maxlength="600" placeholder="Germinated well, generous handful, friendly hand-off..."></textarea>
+    </div>
+    <p class="modal-error" id="review-error" hidden></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close-review>Cancel</button>
+      <button type="button" class="btn btn-teal" id="submit-review" disabled>Post review</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/config.js?v=20260805f"></script>
+<script src="assets/auth.js?v=20260805f"></script>
+<script src="assets/seed-detail.js?v=20260805f"></script>
+</body>
+</html>

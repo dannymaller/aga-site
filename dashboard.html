@@ -25,6 +25,7 @@
     <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
     <a class="nav-map" data-member-only hidden href="map.html">Map</a>
     <a class="nav-library" data-member-only hidden href="library.html">Tools</a>
+    <a class="nav-seeds" data-member-only hidden href="seeds.html">Seeds</a>
   </nav>
   <div class="head-actions">
     <button type="button" class="btn btn-brown" data-signout hidden>Sign out</button>
@@ -85,10 +86,71 @@
         <a class="btn btn-outline wide" href="library.html">Open my library</a>
         <a class="btn btn-outline wide" href="loans.html" style="margin-top:10px">Things I've borrowed</a>
       </section>
+
+      <section class="card panel-card" id="seeds">
+        <div class="panel-head">
+          <h2>My seeds</h2>
+          <a class="edit-link" href="seeds.html">Browse catalog</a>
+        </div>
+        <p class="muted" style="margin-bottom:16px">Seeds you're sharing with neighbors. When you hand some over, log it so your count stays right.</p>
+        <div id="my-seeds"></div>
+        <button type="button" class="btn btn-teal wide" id="add-seed" style="margin-top:14px">Add seeds to share</button>
+      </section>
     </div>
 
   </div>
 </main>
+
+<!-- add / edit a seed listing -->
+<div class="modal-veil" id="seed-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="seed-modal-title">
+    <h2 id="seed-modal-title">Add seeds to share</h2>
+    <div class="field">
+      <label for="s-catalog">Which seed?</label>
+      <select id="s-catalog"></select>
+    </div>
+    <div class="field field-row">
+      <div>
+        <label for="s-qty">How many?</label>
+        <input id="s-qty" type="number" min="0" step="1" value="20">
+      </div>
+      <div>
+        <label for="s-form">Counted as</label>
+        <select id="s-form">
+          <option value="seeds">Individual seeds</option>
+          <option value="pouch">Pouches</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="s-notes">A note <span class="optional">(optional)</span></label>
+      <input id="s-notes" type="text" maxlength="140" placeholder="Saved from my 2025 plants">
+    </div>
+    <p class="modal-error" id="seed-error" hidden></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close-seed>Cancel</button>
+      <button type="button" class="btn btn-teal" id="save-seed">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- log a giveaway -->
+<div class="modal-veil" id="give-modal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="give-title">
+    <h2 id="give-title">Log seeds given</h2>
+    <p id="give-body">How many did you hand over?</p>
+    <div class="field">
+      <label for="give-count">Seeds given</label>
+      <input id="give-count" type="number" min="1" step="1" value="1">
+    </div>
+    <p class="muted" id="give-hint" style="font-size:13px"></p>
+    <p class="modal-error" id="give-error" hidden></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-outline" data-close-give>Cancel</button>
+      <button type="button" class="btn btn-teal" id="confirm-give">Log it</button>
+    </div>
+  </div>
+</div>
 
 <img class="footer-tear" src="assets/torn.png" alt="">
 <footer>
@@ -121,8 +183,9 @@
   </div>
 </footer>
 
-<script src="assets/config.js?v=20260804d"></script>
-<script src="assets/auth.js?v=20260804d"></script>
-<script src="assets/dashboard.js?v=20260804d" defer></script>
+<script src="assets/config.js?v=20260805f"></script>
+<script src="assets/auth.js?v=20260805f"></script>
+<script src="assets/dashboard.js?v=20260805f" defer></script>
+<script src="assets/dashboard-seeds.js?v=20260805f" defer></script>
 </body>
 </html>

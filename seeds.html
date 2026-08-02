@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seed Library | Avondale Gardening Alliance</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="assets/base.css?v=20260805f">
+<link rel="stylesheet" href="assets/account.css?v=20260805f">
+<link rel="stylesheet" href="assets/seeds.css?v=20260805f">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
+</head>
+<body>
+<a class="skip" href="#main-content">Skip to content</a>
+
+<header class="masthead">
+  <a class="logo" href="index.html" aria-label="Avondale Gardening Alliance home">
+    <img src="assets/logo.png" alt="Avondale Gardening Alliance">
+  </a>
+  <nav class="mainnav" aria-label="Main">
+    <a class="nav-about" href="https://avondalegardeners.org/about">About</a>
+    <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
+    <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
+    <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
+    <a class="nav-map" data-member-only hidden href="map.html">Map</a>
+    <a class="nav-library" data-member-only hidden href="library.html">Tools</a>
+    <a class="nav-seeds" data-member-only hidden href="seeds.html">Seeds</a>
+  </nav>
+  <div class="head-actions">
+    <button type="button" class="btn btn-brown" data-signout hidden>Sign out</button>
+    <a class="btn btn-teal" data-account-cta data-join-cta href="login.html">Become a Member</a>
+    <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
+  </div>
+</header>
+
+<main id="main-content">
+  <section class="seed-head">
+    <div>
+      <p class="eyebrow">Seed sharing</p>
+      <h1>The seed library</h1>
+      <p class="lede">Seeds our members are saving and sharing, all suited to the Chicago growing season. Find something to plant, then ask the neighbor who has it. Free, like everything here.</p>
+    </div>
+    <div class="seed-head-actions">
+      <a class="btn btn-teal" href="dashboard.html#seeds">My seeds</a>
+    </div>
+  </section>
+
+  <div class="seed-filters" id="seed-filters" hidden>
+    <button type="button" class="chip is-on" data-cat="all">All</button>
+    <button type="button" class="chip" data-cat="Food crops">Food crops</button>
+    <button type="button" class="chip" data-cat="Herbs">Herbs</button>
+    <button type="button" class="chip" data-cat="Flowers">Flowers</button>
+    <button type="button" class="chip" data-cat="Shrubs">Shrubs</button>
+    <label class="have-toggle">
+      <input type="checkbox" id="only-available"> Only seeds a neighbor has now
+    </label>
+  </div>
+
+  <p class="loading" id="loading">Gathering the seed library...</p>
+
+  <div class="seed-grid" id="seed-grid" hidden></div>
+
+  <p class="seed-empty" id="seed-empty" hidden>No seeds match that filter yet.</p>
+</main>
+
+<script src="assets/config.js?v=20260805f"></script>
+<script src="assets/auth.js?v=20260805f"></script>
+<script src="assets/seeds.js?v=20260805f"></script>
+</body>
+</html>
