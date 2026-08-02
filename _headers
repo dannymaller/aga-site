@@ -6,7 +6,8 @@
   Cache-Control: public, max-age=0, must-revalidate
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
-  X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy: frame-ancestors 'self'
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
 
 # Images and the font never change without changing name, so they can sit.
 /assets/*.png
