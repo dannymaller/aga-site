@@ -2,7 +2,18 @@
 
 const $ = (s, r = document) => r.querySelector(s);
 
-const nextPage = new URLSearchParams(location.search).get("next") || "dashboard.html";
+const params = new URLSearchParams(location.search);
+const nextPage = params.get("next") || "dashboard.html";
+
+// Arriving right after joining (older script fallback): greet, don't confuse
+if (params.get("joined")) {
+  document.addEventListener("DOMContentLoaded", () => {
+    const lede = document.querySelector("#step-email .lede");
+    const h1 = document.querySelector("#step-email h1");
+    if (h1) h1.textContent = "You're in!";
+    if (lede) lede.textContent = "Your membership is saved. Sign in below and you'll land on your dashboard.";
+  });
+}
 let email = "";
 
 // Already signed in? Skip the whole screen.

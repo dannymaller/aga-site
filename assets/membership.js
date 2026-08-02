@@ -230,7 +230,8 @@ form.addEventListener("submit", async e => {
     toolNotes: $("#tool-notes").value.trim(),
     consent: true,
     source: "membership.html",
-    googleCredential: pendingGoogle || ""
+    googleCredential: pendingGoogle || "",
+    token: (window.AGA && AGA.token()) || ""
   };
 
   const btn = $("#submit-btn");
@@ -264,7 +265,7 @@ form.addEventListener("submit", async e => {
     }
     if (!out.ok) throw new Error(out.error || "The script ran but did not write a row.");
 
-    // Signed up through Google? The reply carries the session, so go straight in.
+    // Joining hands back a session, so land on the dashboard signed in.
     if (out.token) {
       try { sessionStorage.removeItem("aga_pending_google"); } catch (e) {}
       AGA.save({
@@ -273,6 +274,17 @@ form.addEventListener("submit", async e => {
         email: (out.profile && out.profile.email) || payload.email,
         profile: out.profile
       });
+      location.href = "dashboard.html";
+      return;
+    }
+
+    // Already signed in and editing: refresh the cached profile, back to the dashboard.
+    if (AGA.session()) {
+      if (out.profile) {
+        const sess = AGA.session();
+        sess.profile = out.profile;
+        AGA.save(sess);
+      }
       location.href = "dashboard.html";
       return;
     }
@@ -289,8 +301,9 @@ form.addEventListener("submit", async e => {
 });
 
 async function finish() {
-  // Joined through Google? Sign them straight in rather than sending them
-  // back around the login screen.
+  // Only reachable when the deployed script is older than this page and did
+  // not hand back a session. Try the Google credential as a fallback, then
+  // send them to sign in rather than stranding them on a dead-end screen.
   if (pendingGoogle) {
     try {
       const data = await AGA.call("googleSignIn", { credential: pendingGoogle });
@@ -305,10 +318,5 @@ async function finish() {
     }
   }
 
-  form.hidden = true;
-  $("#intro").hidden = true;
-  $("#done").hidden = false;
-  $("#done h2").setAttribute("tabindex", "-1");
-  $("#done h2").focus();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  location.href = "login.html?joined=1";
 }
