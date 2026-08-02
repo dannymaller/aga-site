@@ -24,15 +24,18 @@ const pendingGoogle = (() => {
   if (value && field && !field.value) field.value = value;
 });
 
-if (pendingGoogle && handoff.get("email")) {
+if (pendingGoogle) {
+  const address = handoff.get("email") || "";
   const note = $("#google-note");
-  if (note) {
-    $("#google-note-email").textContent = handoff.get("email");
+  if (note && address) {
+    $("#google-note-email").textContent = address;
     note.hidden = false;
   }
-  // Their Google account owns this address, so no need to let them edit it
-  $("#email").readOnly = true;
-  $("#email").classList.add("locked");
+  if (address) {
+    // Their Google account owns this address, so no need to let them edit it
+    $("#email").readOnly = true;
+    $("#email").classList.add("locked");
+  }
 }
 
 /* ---------- signed-in members are editing, not joining ---------- */
@@ -226,7 +229,8 @@ form.addEventListener("submit", async e => {
     tools: collectTools(),
     toolNotes: $("#tool-notes").value.trim(),
     consent: true,
-    source: "membership.html"
+    source: "membership.html",
+    googleCredential: pendingGoogle || ""
   };
 
   const btn = $("#submit-btn");
@@ -260,6 +264,19 @@ form.addEventListener("submit", async e => {
     }
     if (!out.ok) throw new Error(out.error || "The script ran but did not write a row.");
 
+    // Signed up through Google? The reply carries the session, so go straight in.
+    if (out.token) {
+      try { sessionStorage.removeItem("aga_pending_google"); } catch (e) {}
+      AGA.save({
+        token: out.token,
+        expires: out.expires,
+        email: (out.profile && out.profile.email) || payload.email,
+        profile: out.profile
+      });
+      location.href = "dashboard.html";
+      return;
+    }
+
     finish();
   } catch (err) {
     console.error("Sign-up failed:", err);
@@ -277,7 +294,7 @@ async function finish() {
   if (pendingGoogle) {
     try {
       const data = await AGA.call("googleSignIn", { credential: pendingGoogle });
-      if (data.ok && data.member && data.token) {
+      if (data.ok && data.token) {
         try { sessionStorage.removeItem("aga_pending_google"); } catch (e) {}
         AGA.save({ token: data.token, expires: data.expires, email: data.profile.email, profile: data.profile });
         location.href = "dashboard.html";
