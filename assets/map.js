@@ -168,11 +168,64 @@ function buildToolFilters() {
 
 /* ---------- rendering ---------- */
 
+/**
+ * Returns a Map of member id -> [lat, lng] to draw at. Members closer than
+ * ~12m to each other are treated as sharing a spot (a building or household)
+ * and fanned into a small ring around their shared center, so no pin hides
+ * another. A lone member keeps their exact coordinate.
+ */
+function placePins(list) {
+  const out = new Map();
+  const CLUSTER_M = 12;         // how close counts as "same place"
+  const RING_M = 9;             // radius of the fan-out ring
+
+  // meters -> degrees, latitude-corrected for longitude
+  const mToLat = (m) => m / 111320;
+  const mToLng = (m, lat) => m / (111320 * Math.cos(lat * Math.PI / 180));
+
+  const groups = [];
+  list.forEach(m => {
+    // find an existing group whose center is within CLUSTER_M
+    let g = groups.find(gr => {
+      const dLat = (m.lat - gr.lat) * 111320;
+      const dLng = (m.lng - gr.lng) * 111320 * Math.cos(m.lat * Math.PI / 180);
+      return Math.sqrt(dLat * dLat + dLng * dLng) <= CLUSTER_M;
+    });
+    if (!g) { g = { lat: m.lat, lng: m.lng, members: [] }; groups.push(g); }
+    g.members.push(m);
+  });
+
+  groups.forEach(g => {
+    if (g.members.length === 1) {
+      const m = g.members[0];
+      out.set(m.id, [m.lat, m.lng]);
+      return;
+    }
+    // fan the group evenly around a ring centered on the shared spot
+    const n = g.members.length;
+    g.members.forEach((m, i) => {
+      const angle = (2 * Math.PI * i) / n - Math.PI / 2; // start at top
+      const lat = g.lat + mToLat(RING_M) * Math.sin(angle);
+      const lng = g.lng + mToLng(RING_M, g.lat) * Math.cos(angle);
+      out.set(m.id, [lat, lng]);
+    });
+  });
+
+  return out;
+}
+
 function render() {
   const shown = members.filter(matches);
 
   markers.forEach(mk => map.removeLayer(mk));
   markers = new Map();
+
+  // Members at the same address (or within a few meters, which is what
+  // geocoding a shared building gives) would otherwise stack one pin exactly
+  // on top of another, hiding everyone but the last drawn. Group anyone who
+  // lands within ~12m and fan a group of two or more into a small ring around
+  // the shared spot, so every household member gets a visible, clickable pin.
+  const placed = placePins(shown);
 
   shown.forEach(m => {
     const icon = L.divIcon({
@@ -182,7 +235,8 @@ function render() {
       iconAnchor: [11, 11],
       popupAnchor: [0, -13]
     });
-    const marker = L.marker([m.lat, m.lng], { icon: icon, title: m.name, alt: m.name })
+    const at = placed.get(m.id) || [m.lat, m.lng];
+    const marker = L.marker(at, { icon: icon, title: m.name, alt: m.name })
       .addTo(map)
       .bindPopup(popupHTML(m), { maxWidth: 340, minWidth: 260, autoPanPadding: [30, 30] });
     markers.set(m.id, marker);
@@ -404,7 +458,9 @@ async function sendBorrow() {
 function focusMember(m) {
   const marker = markers.get(m.id);
   if (!marker || !map) return;
-  map.flyTo([m.lat, m.lng], Math.max(map.getZoom(), 16), { duration: 0.7 });
+  // Use the marker's real position, which may be fanned out from the raw
+  // coordinate when several members share an address.
+  map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 16), { duration: 0.7 });
   marker.openPopup();
 }
 
