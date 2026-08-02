@@ -23,10 +23,21 @@
     padding:22px;
     display:flex;
     flex-direction:column;
-    max-height:640px;
+    height:min(78vh, 780px);
+    min-height:520px;
     overflow:hidden;
   }
-  .filters{display:flex;flex-wrap:wrap;gap:8px}
+
+  /* Filters and list scroll together. Whatever the chip count, the button
+     below cannot be pushed out. */
+  .panel-body{
+    flex:1 1 auto;
+    min-height:0;
+    overflow-y:auto;
+    padding-right:6px;
+    margin-right:-6px;
+  }
+  .filters{display:flex;flex-wrap:wrap;gap:6px}
 
   .chip-all{margin-bottom:16px}
 
@@ -47,27 +58,24 @@
   .filter-group-tools .chip.is-on{background:var(--brown-dark);border-color:var(--brown-dark);color:#fff}
   .chip{
     font-family:var(--font-body);
-    font-size:14px;
+    font-size:13px;
     font-weight:600;
     color:var(--teal-deep);
     background:#fff;
     border:2px solid var(--line);
     border-radius:999px;
-    padding:7px 14px;
+    padding:6px 11px;
     cursor:pointer;
+    line-height:1.3;
     transition:background .12s ease, border-color .12s ease, color .12s ease;
   }
+  .chip-all{width:100%;padding:10px}
   .chip:hover{border-color:var(--teal)}
   .chip.is-on{background:var(--teal-deep);border-color:var(--teal-deep);color:#fff}
 
   .count{font-size:14px;color:#5a5a5a;margin:0 0 12px}
 
-  .member-list{
-    list-style:none;margin:0;padding:0 4px 0 0;
-    overflow-y:auto;
-    flex:1 1 auto;
-    min-height:0;   /* without this the list refuses to shrink and shoves the button out */
-  }
+  .member-list{list-style:none;margin:0;padding:0}
   .member-list li{margin-bottom:10px}
   .member-list button{
     width:100%;
@@ -90,7 +98,14 @@
   .panel-foot .btn{display:block;text-align:center;padding:15px}
 
   /* ---- map ---- */
-  .map-wrap{position:relative;border:2px solid var(--line);border-radius:0 14px 14px 0;overflow:hidden;min-height:640px}
+  .map-wrap{
+    position:relative;
+    border:2px solid var(--line);
+    border-radius:0 14px 14px 0;
+    overflow:hidden;
+    height:min(78vh, 780px);
+    min-height:520px;
+  }
   #map{position:absolute;inset:0}
 
   .map-message{
@@ -203,7 +218,7 @@
     .map-intro{padding-top:46px}
     .map-intro h1{font-size:40px}
     .map-shell{grid-template-columns:1fr;padding:0 20px}
-    .panel{border-right:2px solid var(--line);border-radius:14px 14px 0 0;max-height:none;order:2;border-top:0;border-radius:0 0 14px 14px}
-    .map-wrap{border-radius:14px 14px 0 0;min-height:420px;order:1}
-    .member-list{max-height:340px}
+    .panel{border-right:2px solid var(--line);order:2;border-top:0;border-radius:0 0 14px 14px;height:auto;max-height:none}
+    .panel-body{overflow:visible}
+    .map-wrap{border-radius:14px 14px 0 0;height:60vh;min-height:380px;order:1}
   }
