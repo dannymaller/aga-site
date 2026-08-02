@@ -4,7 +4,9 @@
 (function () {
   const KEY = "aga_session";
   const CFG = window.AGA_CONFIG || {};
-  const URL_ = CFG.APPS_SCRIPT_URL || "";
+  // The Worker is the backend. Apps Script stays as a fallback only.
+  const URL_ = CFG.API_URL && CFG.API_URL.startsWith("http") ? CFG.API_URL : (CFG.APPS_SCRIPT_URL || "");
+  const IS_WORKER = CFG.API_URL && CFG.API_URL.startsWith("http");
 
   const AGA = {
     debug: new URLSearchParams(location.search).has("debug"),
@@ -60,16 +62,17 @@
     },
 
     /**
-     * Calls the Apps Script. text/plain keeps it a simple request so the
-     * browser never sends a preflight, which Apps Script cannot answer.
+     * Calls the backend. The Worker answers CORS properly, so real JSON is
+     * fine. The old Apps Script fallback needs text/plain to dodge a
+     * preflight request it cannot answer.
      */
     async call(action, payload) {
-      if (!URL_.startsWith("http")) throw new Error("APPS_SCRIPT_URL is not set in assets/config.js");
+      if (!URL_.startsWith("http")) throw new Error("API_URL is not set in assets/config.js");
 
       const body = Object.assign({ action: action }, payload || {});
       const res = await fetch(URL_, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": IS_WORKER ? "application/json" : "text/plain;charset=utf-8" },
         body: JSON.stringify(body)
       });
 
@@ -80,7 +83,7 @@
       try {
         data = JSON.parse(raw);
       } catch (e) {
-        throw new Error("The script returned a page instead of data. Check that the deployment is open to Anyone.");
+        throw new Error("The server returned a page instead of data. Check API_URL in config.js.");
       }
       return data;
     },
