@@ -260,7 +260,7 @@ function popupHTML(m) {
   }
 
   return '<div class="pop">' +
-      '<h3 class="pop-name">' + esc(m.name) + "</h3>" +
+      '<h3 class="pop-name"><a class="pop-profile-link" href="member.html?id=' + esc(m.id) + '">' + esc(m.name) + "</a></h3>" +
       tags + about + tools +
       '<a class="pop-cta" href="mailto:avondalegardeners@gmail.com?subject=' +
         encodeURIComponent("Hello to " + m.name + " from the member map") +
@@ -455,5 +455,14 @@ document.addEventListener("click", e => {
   const btn = e.target.closest("[data-ask]");
   if (btn) openBorrow(btn.dataset.ask, btn.dataset.toolname, btn.dataset.owner);
 });
+
+// Landed here from a profile's Ask to borrow button
+const borrowIntent = new URLSearchParams(location.search);
+if (borrowIntent.get("borrow")) {
+  setTimeout(() => {
+    openBorrow(borrowIntent.get("borrow"), borrowIntent.get("tool") || "this tool",
+      borrowIntent.get("owner") || "this member");
+  }, 400);
+}
 
 start();

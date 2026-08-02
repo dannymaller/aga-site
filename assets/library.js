@@ -85,7 +85,7 @@ function toolCard(t) {
     const l = t.currentLoan;
     body +=
       '<div class="tc-loan">' +
-        "<p><strong>Out with " + esc(l.borrowerName) + "</strong></p>" +
+        "<p><strong>Out with " + (l.borrowerId ? '<a class="profile-link" href="member.html?id=' + esc(l.borrowerId) + '">' + esc(l.borrowerName) + "</a>" : esc(l.borrowerName)) + "</strong></p>" +
         (l.start ? "<p>Pickup " + fmtWhen(l.start) + "</p>" : "") +
         (l.due ? "<p>Due back " + fmtWhen(l.due) + "</p>" : "") +
         (l.borrowerAddress ? '<p class="tc-addr">' + esc(l.borrowerAddress) + "</p>" : "") +
@@ -100,7 +100,7 @@ function toolCard(t) {
     t.pendingRequests.forEach(l => {
       body +=
         '<div class="tc-req">' +
-          "<p><strong>" + esc(l.borrowerName) + "</strong>" +
+          "<p><strong>" + (l.borrowerId ? '<a class="profile-link" href="member.html?id=' + esc(l.borrowerId) + '">' + esc(l.borrowerName) + "</a>" : esc(l.borrowerName)) + "</strong>" +
             (l.due ? " &middot; wants until " + fmtDate(l.due) : "") + "</p>" +
           (l.message ? '<p class="tc-req-msg">' + esc(l.message) + "</p>" : "") +
           '<div class="tc-req-actions">' +

@@ -61,7 +61,11 @@ function loanRow(l, youAre) {
 
   const other = youAre === "borrower" ? l.ownerName : l.borrowerName;
   const otherEmail = youAre === "borrower" ? l.ownerEmail : l.borrowerEmail;
-  const whoLabel = youAre === "borrower" ? "From " + esc(other) : "To " + esc(other);
+  const otherId = youAre === "borrower" ? l.ownerId : l.borrowerId;
+  const otherLink = otherId
+    ? '<a class="profile-link" href="member.html?id=' + esc(otherId) + '">' + esc(other) + "</a>"
+    : esc(other);
+  const whoLabel = (youAre === "borrower" ? "From " : "To ") + otherLink;
 
   let when = "Asked " + fmtDate(l.requested);
   if (l.status === "approved") {
