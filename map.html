@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Member Map | Avondale Gardening Alliance</title>
 <meta name="description" content="See who is growing what around Avondale. Find neighbors with gardens, neighbors looking for space, and members sharing tools.">
-<link rel="stylesheet" href="assets/base.css?v=20260802a">
-<link rel="stylesheet" href="assets/map.css?v=20260802a">
+<link rel="stylesheet" href="assets/base.css?v=20260802c">
+<link rel="stylesheet" href="assets/map.css?v=20260802c">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/leaflet/leaflet.css?v=20260802a">
+<link rel="stylesheet" href="assets/leaflet/leaflet.css?v=20260802c">
 </head>
 <body>
 <a class="skip" href="#main-content">Skip to content</a>
@@ -41,13 +41,23 @@
 
   <div class="map-shell">
     <aside class="panel" aria-label="Member filters and list">
-      <div class="filters" role="group" aria-label="Filter members">
-        <button type="button" class="chip is-on" data-filter="all">Everyone</button>
-        <button type="button" class="chip" data-filter="garden">Has a garden</button>
-        <button type="button" class="chip" data-filter="space">Needs space</button>
-        <button type="button" class="chip" data-filter="help">Wants a hand</button>
-        <button type="button" class="chip" data-filter="helper">Offering help</button>
-        <button type="button" class="chip" data-filter="tools">Shares tools</button>
+      <button type="button" class="chip chip-all is-on" data-filter="all" aria-pressed="true">Everyone</button>
+
+      <div class="filter-group">
+        <p class="filter-label">In the garden</p>
+        <div class="filters" role="group" aria-label="Filter by what members are up to">
+          <button type="button" class="chip" data-garden="garden" aria-pressed="false">Has a garden</button>
+          <button type="button" class="chip" data-garden="space" aria-pressed="false">Needs space</button>
+          <button type="button" class="chip" data-garden="help" aria-pressed="false">Wants a hand</button>
+          <button type="button" class="chip" data-garden="helper" aria-pressed="false">Offering help</button>
+          <button type="button" class="chip" data-garden="starting" aria-pressed="false">Just starting out</button>
+          <button type="button" class="chip" data-garden="seeds" aria-pressed="false">Shares seeds</button>
+        </div>
+      </div>
+
+      <div class="filter-group filter-group-tools" id="tool-filters" hidden>
+        <p class="filter-label">Tool sharing</p>
+        <div class="filters" role="group" aria-label="Filter by tools shared"></div>
       </div>
 
       <p class="count" id="count" aria-live="polite">Loading members...</p>
@@ -69,13 +79,26 @@
         </div>
       </div>
 
-      <div class="legend" aria-hidden="true">
-        <span><i class="dot dot-garden"></i>Has a garden</span>
-        <span><i class="dot dot-space"></i>Needs space</span>
-        <span><i class="dot dot-help"></i>Wants a hand</span>
-        <span><i class="dot dot-other"></i>Other</span>
-        <span><i class="dot dot-ring"></i>Shares tools</span>
+
+      <p class="count" id="count" aria-live="polite">Loading members...</p>
+
+      <ul class="member-list" id="member-list"></ul>
+
+      <div class="panel-foot">
+        <a class="btn btn-teal" href="membership.html">Add yourself to the map</a>
       </div>
+    </aside>
+
+    <div class="map-wrap">
+      <div id="map" role="application" aria-label="Map of Avondale Gardening Alliance members"></div>
+
+      <div class="map-message" id="map-message" hidden>
+        <div>
+          <h2 id="map-message-title">Map unavailable</h2>
+          <p id="map-message-body"></p>
+        </div>
+      </div>
+
     </div>
   </div>
 </main>
@@ -111,9 +134,9 @@
   </div>
 </footer>
 
-<script src="assets/leaflet/leaflet.js?v=20260802a"></script>
-<script src="assets/config.js?v=20260802a"></script>
-<script src="assets/auth.js?v=20260802a"></script>
-<script src="assets/map.js?v=20260802a" defer></script>
+<script src="assets/leaflet/leaflet.js?v=20260802c"></script>
+<script src="assets/config.js?v=20260802c"></script>
+<script src="assets/auth.js?v=20260802c"></script>
+<script src="assets/map.js?v=20260802c" defer></script>
 </body>
 </html>
