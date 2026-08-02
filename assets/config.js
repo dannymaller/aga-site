@@ -1,7 +1,11 @@
 /**
  * The only settings file. All pages read from here.
  *
- * APPS_SCRIPT_URL  the /exec address of the Apps Script web app. Already set.
+ * API_URL          the Cloudflare Worker address, e.g.
+ *                  https://aga-worker.YOURNAME.workers.dev
+ *                  This is the backend now.
+ * APPS_SCRIPT_URL  the old Apps Script /exec. Kept only as a fallback; if
+ *                  API_URL is set it is used instead.
  *
  * BASEMAP          which map background to draw. Options:
  *                    "voyager"   clean and muted, free, no account   (default)
@@ -16,15 +20,13 @@
  *                  light-v11, satellite-streets-v12
  *
  * GOOGLE_CLIENT_ID OAuth client id from Google Cloud Console, ends in
- *                  .apps.googleusercontent.com. Paste the same value into
- *                  GOOGLE_CLIENT_ID in Code.gs. Leave both empty and the
- *                  Google button is hidden, leaving the emailed code.
+ *                  .apps.googleusercontent.com.
  */
 window.AGA_CONFIG = {
+  API_URL: "https://aga-worker.danny-maller.workers.dev",
+
   APPS_SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwRDdKsHdD1g4XrqmaPzukwjtZBu2hjsHrE81Tlv6NckXk4RnmRZRlage-s7aYiKRfy/exec",
-
   GOOGLE_CLIENT_ID: "209288712077-pmk0uhagpn0ti312j75r5l3m81qq12kt.apps.googleusercontent.com",
-
   BASEMAP: "voyager",
   MAPBOX_TOKEN: "",
   MAPBOX_STYLE: "outdoors-v12"
