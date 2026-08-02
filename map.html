@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Member Map | Avondale Gardening Alliance</title>
 <meta name="description" content="See who is growing what around Avondale. Find neighbors with gardens, neighbors looking for space, and members sharing tools.">
-<link rel="stylesheet" href="assets/base.css?v=20260803a">
-<link rel="stylesheet" href="assets/map.css?v=20260803a">
-<link rel="stylesheet" href="assets/library.css?v=20260803a">
+<link rel="stylesheet" href="assets/base.css?v=20260803b">
+<link rel="stylesheet" href="assets/map.css?v=20260803b">
+<link rel="stylesheet" href="assets/library.css?v=20260803b">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Nunito+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Permanent+Marker&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/leaflet/leaflet.css?v=20260803a">
+<link rel="stylesheet" href="assets/leaflet/leaflet.css?v=20260803b">
 </head>
 <body>
 <a class="skip" href="#main-content">Skip to content</a>
@@ -25,12 +25,12 @@
     <a class="nav-events" href="https://avondalegardeners.org/events">Events</a>
     <a class="nav-projects" href="https://avondalegardeners.org/projects">Projects</a>
     <a class="nav-resources" href="https://avondalegardeners.org/resources">Resources</a>
-    <a class="nav-map" href="map.html" aria-current="page">Map</a>
-    <a class="nav-library" href="library.html">Tools</a>
-    <a class="nav-membership" data-account-link href="login.html">Membership</a>
+    <a class="nav-map" data-member-only hidden href="map.html" aria-current="page">Map</a>
+    <a class="nav-library" data-member-only hidden href="library.html">Tools</a>
   </nav>
   <div class="head-actions">
     <button type="button" class="btn btn-brown" data-signout hidden>Sign out</button>
+    <a class="btn btn-teal" data-account-cta data-join-cta href="login.html">Become a Member</a>
     <a class="btn btn-green" href="https://www.gofundme.com/f/support-urban-agriculture-in-avondale-aga">Support AGA!</a>
   </div>
 </header>
@@ -121,9 +121,9 @@
   </div>
 </footer>
 
-<script src="assets/leaflet/leaflet.js?v=20260803a"></script>
-<script src="assets/config.js?v=20260803a"></script>
-<script src="assets/auth.js?v=20260803a"></script>
-<script src="assets/map.js?v=20260803a" defer></script>
+<script src="assets/leaflet/leaflet.js?v=20260803b"></script>
+<script src="assets/config.js?v=20260803b"></script>
+<script src="assets/auth.js?v=20260803b"></script>
+<script src="assets/map.js?v=20260803b" defer></script>
 </body>
 </html>
