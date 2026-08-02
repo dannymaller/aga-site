@@ -38,7 +38,14 @@
     <!-- step one: email -->
     <section class="card" id="step-email">
       <h1>Welcome back</h1>
-      <p class="lede">Sign in with the email you joined with. We'll send you a code, no password to remember.</p>
+      <p class="lede">Sign in with Google, or we'll email you a code. Either way there's no password to remember.</p>
+
+      <div class="google-wrap" id="google-wrap" hidden>
+        <div id="google-btn"></div>
+        <p class="note bad" id="google-error" hidden></p>
+      </div>
+
+      <div class="or-line" id="or-line" hidden><span>or</span></div>
 
       <div class="field">
         <label for="email">Email</label>
@@ -80,7 +87,7 @@
     <section class="card" id="step-nomember" hidden>
       <h1>We don't have that one</h1>
       <p class="lede">No member is signed up with <strong id="unknown-email"></strong>. Joining takes about two minutes and it's free.</p>
-      <a class="btn btn-teal wide" href="membership.html">Sign up now</a>
+      <a class="btn btn-teal wide" id="join-link" href="membership.html">Sign up now</a>
       <div class="alt">
         <button type="button" class="linky" id="try-again">Try another email</button>
       </div>
@@ -120,6 +127,7 @@
   </div>
 </footer>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="assets/config.js"></script>
 <script src="assets/auth.js"></script>
 <script src="assets/login.js" defer></script>
