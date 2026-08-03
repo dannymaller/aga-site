@@ -54,27 +54,7 @@
 
 /* botanical tile stands in for a photo, colored per category */
 .seed-tile{
-  height:132px;position:relative;display:flex;align-items:flex-end;
-  padding:14px 16px;overflow:hidden;
-}
-.seed-tile::before{
-  content:"";position:absolute;inset:0;
-  background-image:
-    radial-gradient(circle at 78% 22%, rgba(255,255,255,.35) 0 14%, transparent 15%),
-    radial-gradient(circle at 20% 80%, rgba(0,0,0,.10) 0 20%, transparent 21%);
-  opacity:.7;
-}
-/* photo tiles: cover-crop the image, dark scrim at the base for the name */
-.seed-tile.has-photo{
-  background-size:cover;background-position:center;
-}
-.seed-tile.has-photo::before{
-  background-image:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.12) 40%, transparent 70%);
-  opacity:1;
-}
-.tile-name{
-  position:relative;font-family:var(--font-display);color:#fff;font-size:21px;
-  text-shadow:0 1px 6px rgba(0,0,0,.35);line-height:1.05;font-weight:400;
+  height:132px;position:relative;overflow:hidden;
 }
 .tile-food  {background:linear-gradient(135deg,#c0442e,#e07a3e)}
 .tile-herb  {background:linear-gradient(135deg,#2f7d4f,#5aa661)}
@@ -130,21 +110,7 @@
 .detail-head{display:flex;gap:28px;align-items:stretch;flex-wrap:wrap;margin-bottom:36px}
 .detail-tile{
   flex:0 0 240px;min-height:200px;border-radius:18px;
-  display:flex;align-items:flex-end;padding:18px 20px;position:relative;overflow:hidden;
-}
-.detail-tile::before{
-  content:"";position:absolute;inset:0;
-  background-image:
-    radial-gradient(circle at 78% 22%, rgba(255,255,255,.35) 0 12%, transparent 13%),
-    radial-gradient(circle at 18% 82%, rgba(0,0,0,.10) 0 18%, transparent 19%);
-}
-.detail-tile.has-photo{background-size:cover;background-position:center}
-.detail-tile.has-photo::before{
-  background-image:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.1) 45%, transparent 70%);
-}
-.detail-tile span{
-  position:relative;font-family:var(--font-display);color:#fff;font-size:28px;
-  line-height:1.05;text-shadow:0 1px 8px rgba(0,0,0,.35);
+  position:relative;overflow:hidden;
 }
 .detail-intro{flex:1;min-width:280px;display:flex;flex-direction:column;align-items:flex-start}
 .detail-intro .eyebrow{
