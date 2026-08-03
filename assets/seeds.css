@@ -52,9 +52,13 @@
   border-color:transparent;
 }
 
-/* botanical tile stands in for a photo, colored per category */
+/* photo tile; the category colour shows through if the photo is missing */
 .seed-tile{
   height:132px;position:relative;overflow:hidden;
+}
+.tile-img,.detail-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;display:block;
 }
 .tile-food  {background:linear-gradient(135deg,#c0442e,#e07a3e)}
 .tile-herb  {background:linear-gradient(135deg,#2f7d4f,#5aa661)}
