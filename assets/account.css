@@ -175,3 +175,25 @@
   .link-danger{color:var(--clay)}
   .field-row{display:flex;gap:14px}
   .field-row > div{flex:1}
+
+/* ---------- modals (needed by the My Seeds dashboard modals) ---------- */
+  .modal-veil{
+    position:fixed;inset:0;z-index:2000;background:rgba(40,35,28,.5);
+    display:flex;align-items:center;justify-content:center;padding:24px;
+  }
+  .modal{
+    background:var(--paper);border:2px solid var(--line);border-radius:16px;
+    padding:30px;max-width:440px;width:100%;box-shadow:0 20px 50px rgba(0,0,0,.3);
+  }
+  .modal h2{font-family:var(--font-display);font-weight:400;font-size:25px;margin:0 0 20px;line-height:1.15;color:var(--teal-deep)}
+  .modal p{font-size:15px;color:#4a4a4a;line-height:1.5;margin:0 0 16px}
+  .modal .field{margin-bottom:16px}
+  .modal label{font-weight:600;font-size:15px;display:block;margin-bottom:6px}
+  .modal .optional{font-weight:400;color:#8a8a8a}
+  .modal input,.modal select,.modal textarea{
+    width:100%;font-family:var(--font-body);font-size:16px;color:var(--ink);
+    padding:12px;border:2px solid var(--line);border-radius:8px;background:#fff;
+  }
+  .modal textarea{resize:vertical;min-height:80px}
+  .modal-error{color:#9a2a1e;font-size:14px;margin:0 0 14px}
+  .modal-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
