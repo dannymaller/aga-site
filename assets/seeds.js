@@ -9,8 +9,16 @@ if (AGA.require()) {
   let cat = "all";
   let onlyAvailable = false;
 
-  // Each category gets a botanical tile treatment (a colored plate) so the grid
-  // reads as intentional until real photos are added per plant.
+  // Catalog ids that have a real photo in assets/seeds/. The rest fall back to
+  // the colored category tile.
+  const HAS_PHOTO = new Set([
+    "cat_cherry_tomato","cat_bush_bean","cat_lettuce","cat_kale","cat_cucumber",
+    "cat_zucchini","cat_pepper","cat_carrot","cat_pea","cat_basil","cat_cilantro","cat_dill",
+    "cat_chives","cat_parsley","cat_marigold","cat_sunflower","cat_zinnia",
+    "cat_nasturtium","cat_cosmos","cat_blackeyed_susan","cat_coneflower","cat_milkweed",
+    "cat_elderberry","cat_serviceberry","cat_ninebark"
+  ]);
+
   const TILE = {
     "Food crops": "tile-food",
     "Herbs": "tile-herb",
@@ -71,10 +79,18 @@ if (AGA.require()) {
             "\u2605".repeat(5 - Math.round(s.rating.average)) + '</span></span>'
         : "";
 
+      const photo = HAS_PHOTO.has(s.id);
+      const tileInner = photo
+        ? '<div class="seed-tile has-photo" style="background-image:url(assets/seeds/' +
+            s.id.replace("cat_", "") + '.jpg)">' +
+            '<span class="tile-name">' + esc(s.name) + '</span>' +
+          '</div>'
+        : '<div class="seed-tile ' + (TILE[s.category] || "tile-food") + '">' +
+            '<span class="tile-name">' + esc(s.name) + '</span>' +
+          '</div>';
+
       card.innerHTML =
-        '<div class="seed-tile ' + (TILE[s.category] || "tile-food") + '">' +
-          '<span class="tile-name">' + esc(s.name) + '</span>' +
-        '</div>' +
+        tileInner +
         '<div class="seed-card-body">' +
           '<div class="seed-card-top">' +
             '<span class="seed-cat">' + esc(s.category) + '</span>' + stars +

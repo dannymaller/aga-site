@@ -10,6 +10,13 @@ const TILE = {
   "Flowers": "tile-flower",
   "Shrubs": "tile-shrub",
 };
+const HAS_PHOTO = new Set([
+  "cat_cherry_tomato","cat_bush_bean","cat_lettuce","cat_kale","cat_cucumber",
+  "cat_zucchini","cat_pepper","cat_carrot","cat_pea","cat_basil","cat_cilantro","cat_dill",
+  "cat_chives","cat_parsley","cat_marigold","cat_sunflower","cat_zinnia",
+  "cat_nasturtium","cat_cosmos","cat_blackeyed_susan","cat_coneflower","cat_milkweed",
+    "cat_elderberry","cat_serviceberry","cat_ninebark"
+]);
 
 if (AGA.require()) {
   const catalogId = new URLSearchParams(location.search).get("id");
@@ -40,7 +47,12 @@ if (AGA.require()) {
     $("#detail").hidden = false;
 
     const tile = $("#detail-tile");
-    tile.className = "detail-tile " + (TILE[seed.category] || "tile-food");
+    if (HAS_PHOTO.has(seed.id)) {
+      tile.className = "detail-tile has-photo";
+      tile.style.backgroundImage = "url(assets/seeds/" + seed.id.replace("cat_", "") + ".jpg)";
+    } else {
+      tile.className = "detail-tile " + (TILE[seed.category] || "tile-food");
+    }
     $("#detail-tile-name").textContent = seed.name;
     $("#detail-cat").textContent = seed.category;
     $("#detail-name").textContent = seed.name;

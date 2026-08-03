@@ -64,6 +64,14 @@
     radial-gradient(circle at 20% 80%, rgba(0,0,0,.10) 0 20%, transparent 21%);
   opacity:.7;
 }
+/* photo tiles: cover-crop the image, dark scrim at the base for the name */
+.seed-tile.has-photo{
+  background-size:cover;background-position:center;
+}
+.seed-tile.has-photo::before{
+  background-image:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.12) 40%, transparent 70%);
+  opacity:1;
+}
 .tile-name{
   position:relative;font-family:var(--font-display);color:#fff;font-size:21px;
   text-shadow:0 1px 6px rgba(0,0,0,.35);line-height:1.05;font-weight:400;
@@ -129,6 +137,10 @@
   background-image:
     radial-gradient(circle at 78% 22%, rgba(255,255,255,.35) 0 12%, transparent 13%),
     radial-gradient(circle at 18% 82%, rgba(0,0,0,.10) 0 18%, transparent 19%);
+}
+.detail-tile.has-photo{background-size:cover;background-position:center}
+.detail-tile.has-photo::before{
+  background-image:linear-gradient(to top, rgba(0,0,0,.55) 0%, rgba(0,0,0,.1) 45%, transparent 70%);
 }
 .detail-tile span{
   position:relative;font-family:var(--font-display);color:#fff;font-size:28px;
