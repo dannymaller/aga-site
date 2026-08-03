@@ -18,11 +18,11 @@ if (AGA.require()) {
     "Shrubs": "tile-shrub",
   };
 
-  // Photos live in assets/seeds/ named after the catalog id. We try each
-  // extension in turn; if none resolve, the img is dropped and the category
-  // colour plate behind it shows through.
+  // Photos live in assets/seeds/, named after the catalog id with the "cat_"
+  // prefix stripped: cat_cherry_tomato -> cherry_tomato.jpg. If a photo is
+  // missing the img removes itself and the category colour plate shows through.
   const IMG_DIR = "assets/seeds/";
-  const IMG_EXTS = [".jpg", ".png", ".webp", ".jpeg"];
+  const photoUrl = id => IMG_DIR + encodeURIComponent(String(id).replace(/^cat_/, "")) + ".jpg";
 
   load();
 
@@ -79,8 +79,7 @@ if (AGA.require()) {
 
       card.innerHTML =
         '<div class="seed-tile ' + (TILE[s.category] || "tile-food") + '">' +
-          '<img class="tile-img" alt="" loading="lazy" src="' +
-            IMG_DIR + encodeURIComponent(s.id) + IMG_EXTS[0] + '" data-ext="0" data-sid="' + esc(s.id) + '">' +
+          '<img class="tile-img" alt="" loading="lazy" src="' + photoUrl(s.id) + '">' +
         '</div>' +
         '<div class="seed-card-body">' +
           '<div class="seed-card-top">' +
@@ -97,18 +96,10 @@ if (AGA.require()) {
         '</div>';
       grid.appendChild(card);
       const img = card.querySelector(".tile-img");
-      if (img) img.addEventListener("error", onImgError);
+      if (img) img.addEventListener("error", () => img.remove());
     });
   }
 
-  // Walk the extension list; give up quietly once it is exhausted.
-  function onImgError(e) {
-    const img = e.currentTarget;
-    const next = Number(img.dataset.ext) + 1;
-    if (next >= IMG_EXTS.length) { img.remove(); return; }
-    img.dataset.ext = String(next);
-    img.src = IMG_DIR + encodeURIComponent(img.dataset.sid) + IMG_EXTS[next];
-  }
 
   function row(label, val) {
     if (!val) return "";
